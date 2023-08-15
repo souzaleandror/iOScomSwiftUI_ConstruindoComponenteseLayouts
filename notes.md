@@ -702,3 +702,365 @@ Utilizar ícones do sistema (SF Symbols) como um botão;
 Implementar o Spacer para ocupar espaços disponíveis em um HStack;
 Configurar o padding e o PreviewProvider para melhorar a pré-visualização.
 Concluímos a aula 1! Espero você na próxima aula!
+
+@03-Montando peças do Grid
+
+@@01
+Projeto da aula anterior
+
+Você pode revisar o seu código e acompanhar o passo a passo do desenvolvimento do nosso projeto e, se preferir, pode baixar o projeto da aula anterior.
+Bons estudos!
+
+https://github.com/alura-cursos/chef-delivery-parte1/archive/refs/heads/aula-2.zip
+
+@@02
+Entendendo o Grid
+
+Construímos a NavigationBar, a primeira funcionalidade do nosso aplicativo.
+Agora, desenvolveremos o próximo componente que é a grade de menu separada por serviços.
+
+Esse componente é muito parecido com o UICollectionView, porém, nesse caso trabalharemos com o Grid, que forma uma grade de elementos.
+Entendendo o Grid
+No lado esquerdo do Xcode, clicamos na pasta "ChefDelivery" com o botão direito e depois em "New group". Nomeamos essa nova pasta de "GridView" e arrastamos para baixo do "NavigationBar".
+
+Para criar o arquivo nessa pasta, clicamos com o botão direito e depois em "New File". Feito isso, abre uma janela. Nela, deixamos selecionado a opção "SwiftUI View", depois clicamos no botão "Next".
+
+Em seguida, definimos o nome do arquivo como OrderTypeGridView e clicamos no botão "Create" localizado no lado inferior direito.
+
+Feito isso temos uma estrutura de código que estamos começando a nos familiarizar que é a struct View e a struct PreviewProvider.
+import SwiftUI
+
+struct OrderTypeGridView: View {
+        var body: some View {
+                Text()
+        }
+}
+
+struct OrderTypeGridView_Previews: PreviewProvider {
+        static var previews: some View {
+                OrderTypeGridViews()
+        }
+}
+COPIAR CÓDIGO
+Abaixo do struct View escrevemos Grid e abrimos o bloco de código com as chaves. Na linha seguinte, escrevemos GridRow e abrimos chaves novamente. Esse objeto cria uma linha na qual conseguimos colocar elementos lado a lado.
+
+Para visualizarmos essa estrutura, na linha abaixo escrevemos Text("2a feira"), na seguinte Text("3a feira") e por fim Text("4a feira").
+
+import SwiftUI
+
+struct OrderTypeGridView: View {
+        var body: some View {
+                Grid {
+                        GridRow {
+                                Text("2a feira")
+                                Text("3a feira")
+                                Text("4a feira")
+                        }
+                }
+        }
+}
+COPIAR CÓDIGO
+Feito isso, temos a seguinte pré-visualização:
+
+Print da pré-visualização do Xcode. Na tela do celular, em um fundo branco, os textos "2a feira", "3a feira" e "4a feira" enfileirados horizontalmente.
+
+Para alimentar a grade de informações que estamos construindo, podemos criar outro GridRow. Para facilitar, copiamos esse trecho de código que acabamos de criar e colamos logo abaixo.
+
+Agora, faremos as alterações. Suponha que essa seja uma grade de aulas da faculdade, então, na linha abaixo colocaremos as disciplinas para cada dia da semana.
+
+Para isso, definimos o primeiro texto como Text("Engenharia de software"), seguido por Text("Redes") e Text("Matemática discreto").
+
+Em seguida, utilizaremos um divisor de grade. Para isso, entre os GridRows adicionamos o Divider(), que adiciona uma linha de espaço entre eles.
+
+Feito isso, na pré-visualização as matérias ficam ordenadas abaixo de cada dia da semana.
+
+Para aumentar essa grade escolar, basta adicionar mais um Divider() e outro bloco GridRow.
+
+Se abrimos o simulador, repare que no topo da tela do nosso aplicativo temos uma grade de elementos formada pelos ícones de restaurante, farmácia, descontos, gourmet, mercado, pet e bebidas. Cada um desses itens pode se caracterizar como um GridItem().
+
+Geralmente utilizamos o Grid quando trabalhamos com informações fixas. O uso desse componente não é recomendado em alguns casos, como em tabelas grandes que ocupam um espaço além do que é exibido na tela.
+
+Isso porque o Grid renderiza todos os elementos da tela, independente se é a área visível ou não. Isso acaba utilizando mais memória de forma desnecessária.
+
+Para melhor escalabilidade e desempenho, existe outro tipo de estrutura recomendada para grades com mais informações, o Lazy horizontal grid e Lazy vertical grid. Diferente do Grid, esses componentes renderizam somente o que aparece na tela, ou seja, somente o necessário.
+
+No vídeo seguinte começaremos a montar a grade do nosso aplicativo.
+
+Até lá!
+
+@@03
+Entendendo as diferenças: Quando usar o Grid ou o Lazy Grid?
+
+Quando estamos desenvolvendo um app, constantemente estamos resolvendo problemas e temos várias ferramentas para solucioná-los.
+No Swift UI, vimos que há duas formas para criar um grid: o Grid e o LazyGrid.
+
+De acordo com o conteúdo visto na aula, qual a principal diferença entre o Grid e LazyGrid em SwiftUI?
+
+Grid é usado para exibir dados em grade ou tabela, preferencialmente com tamanho fixo. LazyGrid tem a mesma utilidade, porém ganha em performance, pois renderiza as informações de acordo com a necessidade (itens visíveis na tela).
+ 
+O Grid geralmente é usado para montar uma estrutura com elementos fixos. Já o LazyGrid é recomendado para montar uma estrutura de layout que dependa da quantidade de informações que vem dinamicamente de uma API. Nesse caso, há o ganho de performance por renderizar somente os elementos visíveis na tela conforme a necessidade.
+Alternativa correta
+Grid é utilizado para empilhar elementos lado a lado. E LazyGrid pode ser utilizado para empilhar elementos um embaixo do outro.
+ 
+Alternativa correta
+Grid é um componente utilizado para listar elementos um embaixo do outro como uma lista de elementos fixo. LazyGrid é um componente que possibilita colocar elementos lado a lado.
+ 
+Alternativa correta
+Gridé utilizado para criar uma grade dinâmica de elementos, na qual serão carregadas as informações de acordo com a necessidade dos elementos na tela. LazyGrid é utilizado para criar uma grade fixa de elementos.
+
+@@04
+Construindo o Grid
+
+Aprendemos que o Grid tem um comportamento semelhante ao de uma tabela. Para esboçar seu comportamento, criamos uma grade escolar.
+Também descobrimos que esse componente é recomendado para informações fixas, porém, listas maiores não. Nesse caso o melhor é utilizar o Lazy horizontal grid ou Lazy vertical grid.
+
+Nesse vídeo, colocaremos em prática esse aprendizado.
+
+Construindo o Grid
+Começamos abrindo o simulador. Na parte superior do aplicativo, encontramos a grade com as categorias de itens organizadas lado a lado em duas linhas.
+
+Print do aplicativo Chef Delivery no simulador. No topo do celular, visualizamos uma grade com a categoria de itens oferecidos, composta por uma foto e um título, sendo: "Restaurantes" indicado pela foto de hambúrguer, "Farmácia" com a foto de cartelas de remédio, "Descontos" indicado pela imagem gráfica de três balões vermelhos com o símbolo de "%" dentro. Ao lado, "Gourmet" com a foto de um prato de comida, seguido por "Mercado" indicado por uma cesta com compras, "Pet" com a foto de um cachorro e "Bebidas" indicado pela foto de dois copos com bebidas.
+
+Criaremos essa estrutura. Para isso, abrimos o Xcode e apagamos o exemplo que criamos na aula anterior.
+
+Em seguida, abaixo de struct View escrevemos LazyHGrid(). Dentro das chaves passamos rows:[]. Nos colchetes, pulamos para a linha seguinte definimos a quantidade de linhas, que será duas. Para isso, escrevemos GridItem(.fixed(100))
+
+Para adicionarmos o próximo elemento da lista, adicionamos uma vírgula, pulamos uma linha e escrevemos novamente GridItem(.fixed(100)).
+
+import SwiftUI
+
+struct OrderTypeGridView: View {
+        var body: some View {
+                LazyHGrid(rows:[
+                    GridItem(.fixed(100)),
+                    GridItem(.fixed(100))
+                ]) 
+
+//código omitido
+COPIAR CÓDIGO
+Queremos uma lista de GridItem com imagem e texto para cada categoria de itens do aplicativo. Nessa aula criaremos uma lista de strings com os textos e na aula seguinte adicionaremos as imagens.
+
+Para isso, abaixo da linha struct View, damos espaço e declaramos a variável let orders = []. Dentro dos colchetes passaremos o título de cada item do aplicativo. Dessa forma:
+
+//código omitido
+
+let orders = ["Restaurantes","Farmácia","Descontos","Gourmet","Mercados","Pet","Bebidas"]
+
+//código omitido
+COPIAR CÓDIGO
+Agora, utilizaremos o for para percorrer cada item para preencher cada linha do GridITem(). Então, após o último parêntese do LazyHGrid(), nas chaves declaramos ForEach() e nos parênteses passamos orders.
+
+Abrimos um novo bloco de código com chaves e damos espaço. Dentro dela definimos orderItem in. Na linha de baixo, escrevemos Text(orderItem).
+
+Quando utilizamos o ForEach() para percorrer uma lista que não tem ID dá erro de compilação. Para resolver isso basta utilizarmos o id: \.self.
+import SwiftUI
+
+struct OrderTypeGridView: View {
+
+        let orders = ["Restaurantes","Farmácia","Descontos","Gourmet","Mercados","Pet","Bebidas"]
+
+        var body: some View {
+                LazyHGrid(rows:[
+                    GridItem(.fixed(100)),
+                    GridItem(.fixed(100))
+                ]) {
+                        ForEach(orders, id: \.self) { orderItem in
+                                Text(orderItem
+                        }
+                }
+        }
+}
+COPIAR CÓDIGO
+Feito isso, a pré-visualização na lateral direita da tela é carregada. Repare que já temos uma estrutura semelhante a do simulador, visualizamos as duas linhas de textos referentes aos itens.
+
+Print da pré-visualização do Xcode. No celular, em um fundo branco, duas linhas com as categorias de itens oferecidos no aplicativo. Na primeira linha os títulos "Restaurantes", "Descontos", "Mercados", "Bebidas". Na linha abaixo "Farmácia", "Gourmet" e "Pet".
+
+Na aula seguinte adicionaremos os modificadores e as imagens.
+
+Te esperamos lá!
+
+@@05
+Criando mocks
+
+Na aula anterior criamos uma lista de strings para montar uma estrutura semelhante ao aplicativo.
+Porém, além do texto também precisaremos mostrar as imagens dos itens e essa é uma lista simples. Isso significa que não atende o que precisamos.
+
+Em uma situação real, é comum que o aplicativo se comunique com um servidor por meio de uma API para obter os itens necessários para criação dos componentes do Grid.
+
+Como o foco do curso nesse momento não é trabalhar com requisições http, criaremos uma classe que irá simular esse comportamento chamada mock.
+
+mocks são classes falsas que utilizamos para simular determinados comportamentos no aplicativo.
+Criando OrderType
+Como queremos manter a organização do projeto, criaremos uma nova pasta. Para isso, no menu lateral esquerdo, clicamos com o botão direito na pasta "ChefDelivery" e depois em "New Group". Nomeamos de Model e arrastamos para baixo de "App".
+
+Dentro da Model criaremos dois arquivos. Para isso, clicamos nela com o botão direito e depois em "New File". Selecionamos a opção "Swift File" e clicamos no botão "Next". Nomeamos o arquivo como "OrderType" e depois clicamos no botão "Create".
+
+Quando criamos um novo arquivo do tipo Swift File ele vem vazio.
+Nesse arquivo, declaramos struct OrderType em seguida abrimos o bloco de código com as chaves.
+
+Dentro dela, criaremos alguns atributos, começando com let id: Int. Feito isso, na primeira linha, após PrderType implementamos o protocolo Identifiable que serve para identificar a struct quando a utilizarmos.
+
+import Foundation
+
+struct OrderType: Identifiable {
+        let id: Int
+}COPIAR CÓDIGO
+OrderTypeGridView
+Se acessarmos o arquivo OrderTypeGridView na lateral esquerda da ferramenta, notamos que no ForEach() passamos um parâmetro id \.self para compilar o projeto.
+
+Assim, quando for percorrer a lista, cada elemento será identificado. Isso é muito útil quando trabalhamos com estrutura simples de lista.
+
+OrderType
+A outra forma de fazer isso é implementando o protocolo Identifiable, que necessita de um id, asism como fizemos no arquivo OrderType.
+
+Quando formos refatorar esse código, você irá perceber que esse parâmetro não será mais necessário, pois a própria classe se auto-identifica.
+Agora, vamos definir os outros atributos. Abaixo de let id: Int escrevemos let name: String e na linha seguinte let image: String.
+
+import Foundation
+
+struct OrderType: Identifiable {
+        let id: Int
+        let name: String
+        let image: String
+}COPIAR CÓDIGO
+Essa é a estrutura que irá nos ajudar a criar o Grid com texto e imagem.
+
+Criando mocks
+Agora vamos criar o arquivo mock. Para isso, na pasta "Model", clicamos com o botão direito e depois em "New File". Mantemos a opção "Swift File" selecionada e clicamos em "Next". Em seguida, nomeamos de DataSourceMock e clicamos no botão "Create".
+
+Novamente temos um arquivo vazio. Primeiro criaremos a lista de mocks para montar o Grid. Começamos declarando let ordersMock: [OrderType] seguido do sinal de igual e colchetes.
+
+Dentro dele, na linha seguinte, escrevemos OrderType(). Nas chaves passamos id:1 seguido de name:"Restaurantes".
+
+import Foundation
+
+ let ordersMock: [OrderType] = [
+         OrderType(id: 1, name: "Restaurantes")
+]COPIAR CÓDIGO
+Em seguida passaremos a imagem. Imagens e ícones utilizados no aplicativo geralmente ficam na pasta "Assets". Então, na lateral esquerda, a acessamos. Depois, arrastamos do computador para essa pasta, os arquivos que usaremos no aplicativo ao longo do curso.
+
+Agora, as imagens que utilizaremos nos ícones estão nessa pasta, todas nomeadas.
+
+Voltando ao nosso código, escrevemos image: "hamburguer", o nome da imagem que irá representar o ícone "Restaurantes". Adicionamos vírgula e pulamos para a linha seguinte.
+
+Agora, faremos o mesmo para os outros ícones. Portanto, copiamos essa mesma linha e colamos seis vezes seguidas. Em seguida, fazemos as alterações necessárias, definindo o nome e o nome da imagem dos outros ícones.
+
+O código fica da seguinte forma:
+
+import Foundation
+
+ let ordersMock: [OrderType] = [
+        OrderType(id: 1, name: "Restaurantes", image: "hamburguer"),
+        OrderType(id: 2, name: "Mercado", image: "mercado"),
+        OrderType(id: 3, name: "Farmácia", image: "farmácia"),
+        OrderType(id: 4, name: "Pet", image: "petshop"),
+        OrderType(id: 5, name: "Descontos", image: "descontos"),
+        OrderType(id: 6, name: "Bebidas", image: "bebidas"),
+        OrderType(id: 7, name: "Gourmet", image: "gourmet"),
+]COPIAR CÓDIGO
+OrderTypeGridView
+Voltamos no arquivo OrderTypeGridView. Como não usaremos mais a lista let oerders, apagamos.
+
+Depois, dentro de ForEach() apagamos o orders e o id. No lugar, passamos a lista que criamos ordersMock. Por fim, na linha de baixo, em Text(), passamos dentro dos parêntese orderItem.name
+
+struct OrderTypeGridView: View {
+
+        var body: some View {
+                LazyHGrid(rows: [
+                        GridItem(.fixed(100))
+                        GridItem(.fixed(1))
+                ]) {
+                        ForEach(ordersMock) { orderItem in
+                                Text(orderItem.name)
+                        }
+                }
+        }
+}COPIAR CÓDIGO
+Com essa estrutura de dados conseguimos montar o GridItem com imagem e título.
+
+Daremos continuidade no vídeo seguinte.
+
+@@06
+Qual a função dos mocks?
+
+Como vimos, para montar um grid, precisamos de duas informações: o nome da categoria e a foto da categoria do restaurante. Assim, você pode se perguntar: mas de onde vamos puxar essas duas informações?
+Vimos que existem duas maneiras principais.
+
+A primeira, que acontece na vida real, é puxar essas informações da nuvem, ou seja, os dados ficam armazenados na internet (servidores) e precisamos fazer um pedido. Como essa abordagem é complexa, não entraremos em detalhes no momento.
+
+Infográfico que mostra a comunicação entre um aplicativo e um servidor. No lado esquerdo da tela, há a imagem de um celular e, abaixo dela, o título “aplicativo” e o subtítulo “precisa mostrar informações. No lado direito da imagem, há a imagem de um servidor acompanhada do título “servidor” e do subtítulo “armazena informações”. Entre a imagem do aplicativo e do servidor, há duas flechas e a palavra “comunicação”
+
+A segunda solução, que utilizamos, são os mocks, certo?
+
+Sobre o mock, assinale as alternativas verdadeiras:
+
+https://caelum-online-public.s3.amazonaws.com/3152-ios/Aula+3+-+Montando+peças+do+Grid/Untitled.png
+
+Para pegar os dados do mock, usamos o seguinte código:
+ForEach(ordersMock) { orderItem in
+        Text(orderItem.name)
+} 
+Usamos o forEach para fazer a função de percorrer o arquivo de mocks e puxar de lá o nome e a imagem da categoria de restaurante.
+ 
+Alternativa correta
+Para pegar os dados do mock, usamos o seguinte código:
+ForEach(ordersMock) { orderItem in
+        Text(orderItem.name)
+} 
+Usamos o forEach para fazer a função de percorrer o arquivo de mocks e puxar de lá o nome da categoria de restaurante.
+ 
+Correto! É isso aí!
+Alternativa correta
+Na prática, o mock é uma pasta de arquivos que contém as informações de nome e imagem.
+ 
+Alternativa correta
+O mock (simulação) serve como uma espécie de “fonte de dados” que disponibiliza as informações de nome e foto de cada elemento do grid.
+ 
+É isso mesmo! O mock vai fornecer as informações necessárias para construir o grid.
+Alternativa correta
+Na prática, criamos esses mocks para não ter a necessidade de fazer uma requisição para um servidor.
+ 
+Correto! Mocks são objetos simulados para um determinado comportamento, geralmente, imitando uma situação da vida real.
+Alternativa correta
+O mock (simulação) serve como uma espécie de “banco de dados” que armazena as informações locais (no dispositivo) de nome e foto de cada elemento do grid.
+
+@@07
+Para saber mais: comunicação HTTP
+
+Neste momento, não vamos focar em comunicação HTTP, pois envolve técnicas mais complexas.
+Caso tenha curiosidade, pode consultar o artigo HTTP: Desmistificando o protocolo da Web.
+
+Se quiser se aprofundar temos o curso: HTTP - entendendo a web por baixo dos panos (mas deixe para ver esse curso só depois de concluir o curso de SwiftUI).
+
+@@08
+Faça como eu fiz: construindo a primeira parte do Grid
+
+Hora de colocar a mão na massa!
+É sua vez de construir o grid de categorias que mostra os tipos de lojas (farmácia, restaurante etc) do app! Essa construção terá duas etapas. Na primeira, vamos montar as “peças” do grid (o GridItem), seguindo as dicas a seguir:
+
+Crie um novo arquivo para construir o Grid;
+Implemente um LazyHGrid para desenhar a “tabela” do grid;
+Utilize o protocolo "Identifiable" para identificar os itens da lista de mocks;
+Crie uma pasta que vai funcionar de mock e será a fonte de dados do grid.
+O resultado esperado é que, após essas implementações, o app continue rodando perfeitamente. Falta a segunda parte de implementação do grid, que veremos na próxima aula.
+Vamos lá?
+
+Opinião do instrutor
+
+O objetivo desta atividade é estimular a prática necessária para seu aprendizado!
+Você pode conferir o código do projeto até o momento através desta branch no GitHub.
+
+Se precisar de ajuda, chama a gente no fórum ou discord!
+
+@@09
+O que aprendemos?
+
+Nessa aula, você aprendeu como:
+Implementar a estrutura básica do LazyHGrid para o grid;
+Criar mocks para os dados, como a classe "OrderType" com seus atributos;
+Utilizar o protocolo "Identifiable" para identificar os itens da lista de mocks;
+Construir o layout do "GridItem" utilizando as imagens da pasta de assets;
+Aplicar modificadores na imagem, como redimensionamento e espaçamento;
+Utilizar a view "GridItem" no "OrderTypesGridView" para exibir os tipos de restaurantes;
+Definir a quantidade de linhas no "LazyHGrid" para controlar a disposição e aparência dos itens.
+Na próxima aula, vamos finalizar o layout utilizando os componentes que criamos.
