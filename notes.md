@@ -312,3 +312,393 @@ Entender o código da estrutura default (padrão) de uma view (ou seja, estrutur
 E assim damos o pontapé inicial no Chef Delivery!
 
 Vejo você na próxima aula.
+
+#### 15/08/2023
+
+@02-Criando a barra superior do app
+
+@@01
+Projeto da aula anterior
+
+Como apenas abrimos o projeto no Xcode, não temos link do projeto para esta aula. Você pode seguir as instruções da última aula e abrir o projeto em seu computador.
+Vamos iniciar a segunda aula e começar a colocar a mão no código?
+
+@@02
+Implementando a NavigationBar no app
+
+Recapitulando: nossa demanda é construir a tela principal de um aplicativo de entrega de refeições chamado ChefDelivery.
+Vamos desenvolver vários componentes dessa tela e, a cada aula, incrementaremos nosso projeto com novas funcionalidades e entregas. Construiremos essa tela de cima para baixo, ou seja, começaremos pela NavigationBar e avançaremos para as funcionalidades inferiores em seguida.
+
+A NavigationBar é o componente superior da tela, contendo dois botões: um é o nome do endereço de entrega ("R. Vergueiro, 3185") e o outro é um ícone de sino da área de notificações.
+
+Organizando a estrutura de pastas
+Para começar, vamos criar uma nova View no Xcode. Na parte superior esquerda da tela, temos a estrutura de pastas do nosso projeto em que, à medida que o projeto for avançando, vamos criando novas classes e Views.
+
+A fim de manter a organização do projeto, criaremos uma estrutura de pastas baseada em cada funcionalidade. Para criar uma nova pasta, clicamos com o botão direito na pasta com o nome do nosso aplicativo, "ChefDelivery". Selecionamos a opção "New Group". Nomearemos esse novo grupo de "NavigationBar" e o arrastaremos para baixo dos arquivos preexistentes.
+
+Para manter a organização dos arquivos criados por default (padrão) no projeto, vamos criar mais uma pasta, seguindo o mesmo procedimento. A nomearemos como "App" e arrastamos os arquivos preexistentes para dentro dela.
+
+Com isso, nossa estrutura de pastas ficará assim (por enquanto):
+
+ChefDelivery
+App
+ChefDeliveryApp
+ContentView
+NavigationBar
+Assets
+Preview Content
+Arquivo da NavigationBar
+Agora que já temos a pasta da feature (funcionalidade) que vamos desenvolver, criaremos uma nova View com o SwiftUI. Para isso, clicamos com o botão direito na pasta "NavigationBar" e selecionar a opção "New File..." (novo arquivo).
+
+Na caixa de diálogo que se abrir, mantemos selecionado o template "SwiftUI View" e clicamos em "Next". Na nova caixa de diálogo, nomeamos o arquivo como NavigationBar e clicamos em "Create".
+
+Com isso, um novo código se abre na área de desenvolvimento, com a mesma estrutura que conhecemos anteriormente: uma struct contendo o body, que é onde iremos, de fato, desenhar a NavigationBar; uma segunda struct contendo o preview.
+
+Componentes da NavigationBar
+Conferindo o simulador do projeto, vamos começar a entender alguns conceitos. Nossa NavigationBar contém o endereço de entrega e um ícone simples de notificações. Precisamos pensar em como adicionar esses elementos na nossa View.
+
+Primeiramente, consideramos esses dois elementos como botões porque podemos clicar neles para realizar determinada ação. Futuramente, podemos clicar uma tela de redirecionamento para ambos os botões, ou seja, uma tela de alteração do endereço de entrega e uma tela de notificações.
+
+É importante perceber, aos poucos, quais componentes precisamos utilizar para solucionar determinado problema. Se o endereço fosse um texto simples, sem clique, não precisaria ser um botão, mas apenas uma label Text(). O mesmo vale para o ícone de notificações.
+
+Construir essa linha de raciocínio ao longo do curso é muito importante. Assim, quando você se deparar com outro aplicativo, identificará automaticamente os componentes usados no desenvolvimento de cada elemento da tela.
+Sendo assim, vamos inserir esses dois botões na View. Na linha 12, dentro de body, temos um Text() que, por default, tem o valor "Hello, World!". Vamos remover esse componente para adicionar os componentes desejados.
+
+Organizando os elementos na View
+Algo fundamental a pensar é: como queremos organizar esses botões dentro da View? Um abaixo do outro? Um ao lado do outro? Um acima do outro? Baseado nessas respostas, escolhemos qual Container utilizaremos. Container é um espaço que temos na View para organizar esses objetos.
+
+Por exemplo: se quisermos colocar um botão abaixo do outro, podemos utilizar uma estrutura chamada "Vertical stack view", ou "empilhamento vertical" em português. Para isso, na linha 12 (onde estava o Text()), vamos declarar um VStack {}:
+
+struct NavigationBar: View {
+    var body: some View {
+        VStack {
+
+        }
+    }
+}COPIAR CÓDIGO
+Dentro desse VStack {}, adicionaremos dois botões.Caso você não saiba a sintaxe para declarar um botão (ou qualquer outro elemento) ou os componentes disponíveis para usar no aplicativo, você pode acessar a biblioteca de elementos.
+
+No canto superior direito da tela, temos um botão com ícone de sinal de adição chamado "Library". Ao clicar nesse botão, será aberta uma caixa com várias opções de elementos para escolher, como Button (botão), Form (formulário), Link e assim por diante.
+
+Ou seja, você não precisa, nesse momento, decorar a sintaxe de tudo o que implementaremos. À medida em que você utilizar esses elementos, a sintaxe dos componentes mais frequentes vai ficando mais gravada na sua memória. O botão é um deles.
+
+Podemos implementá-lo de duas formas: clicar no componente "Button" na caixa de diálogo e arrastá-lo para o nosso código, ou digitar à mão o elemento Button() e, entre aspas, dar um nome para ele, por exemplo, "Notificações".
+
+Quando clicamos e arrastamos diretamente da biblioteca, temos um placeholder chamado Action dentro do componente que indica que o que colocarmos dentro desse botão será a ação executada quando clicarmos nele. Ele não representa nada, então podemos clicar nele duas vezes e ele sumirá, porque não representa nada.
+
+Vamos também alterar o nome do primeiro botão, deixando exatamente como está no protótipo: "R. Vergueiro, 3185". Por enquanto, nossa primeira struct está assim:
+
+struct NavigationBar: View {
+    var body: some View {
+        VStack {
+            Button("R. Vergueiro, 3185") {
+
+            }
+
+            Button("Notificações") {
+
+            }
+        }
+    }
+}COPIAR CÓDIGO
+Na pré-visualização, os elementos estão empilhados. Ambos são clicáveis.
+
+simulador do iPhone no Xcode. no centro da tela branca, o elemento "R. Vergueiro, 3185" e, abaixo dele, o elemento "Notificações". ambos em letras azuis.
+
+Estamos utilizando o Vertical stack view (VStack {}), o empilhamento vertical. Mas, conforme nosso protótipo, os elementos da NavigationBar deveriam estar um ao lado do outro: o "R. Vergueiro, 3185" no centro e o botão de notificações no canto direito.
+
+Para isso, podemos alterar o Container. Ao invés de usar o Vertical stack view, usamos o Horizontal stack view, alterando o VStack {} para HStack {}:
+
+struct NavigationBar: View {
+    var body: some View {
+        HStack {
+            Button("R. Vergueiro, 3185") {
+
+            }
+
+            Button("Notificações") {
+
+            }
+        }
+    }
+}COPIAR CÓDIGO
+Na pré-visualização, os botões agora estão um ao lado do outro:
+
+simulador do iPhone no Xcode. no centro da tela branca, os elementos "R. Vergueiro, 3185" e "Notificações" estão um ao lado do outro, nessa ordem, da esquerda para a direita.
+
+Parece simples, mas é um começo fundamental para entender as estruturas de Container e o empilhamento de elementos na vertical e horizontal. Também aprendemos a abstrair esses componentes visuais e os implementando de acordo com o que precisamos.
+
+Obviamente, a NavigationBar ainda não está igual à do protótipo que precisamos implementar. Mas, essa estrutura inicial é necessária para formatar os elementos da maneira desejada.
+
+Continuaremos isso a seguir!
+
+@@03
+O objetivo do botão
+
+Você iniciou a construção da primeira funcionalidade do Chef Delivery!
+De acordo com o código desenvolvido na aula para criar um NavigationBar customizável em SwiftUI, qual é o propósito do button (botão) "R. Vergueiro, 3185"?
+
+Adicionar um ícone de localização à barra de navegação.
+ 
+Alternativa correta
+Adicionar um ícone de localização à barra de navegação.
+ 
+Alternativa correta
+Modificar o estilo da fonte para o título da barra de navegação.
+ 
+Alternativa correta
+Exibir um botão com o título "R. Vergueiro, 3185" na barra de navegação.
+ 
+Isso aí! Neste momento, nosso objetivo foi apenas mostrar o botão na tela.
+
+@@04
+Para saber mais: a library de elementos do SwiftUI
+
+Como vimos, o SwiftUI possui uma opção incrível chamada library (biblioteca), que oferece vários templates (modelos) de objetos para utilizarmos. No nosso caso, utilizamos um button (para ver mais detalhes sobre esse objeto, você pode acessar a documentação). Essa biblioteca ajuda bastante quando não lembramos a sintaxe do código.
+Outros objetos que você pode utilizar são:
+
+Text (para exibir um texto na interface do usuário);
+Image (para exibir imagens na interface do usuário);
+TextField (para entrada de texto do usuário);
+Toggle (um interruptor que pode ser alternado entre dois estados);
+Slider (uma barra deslizante para selecionar um valor em um intervalo);
+DatePicker (um seletor de data);
+Picker (um seletor de valor em uma lista de opções);
+List (uma exibição em lista de dados);
+ScrollView (uma visualização que permite a rolagem de conteúdo);
+NavigationLink (um link que permite a navegação para outra tela);
+Alert (uma exibição de alerta para exibir mensagens ao usuário);
+ActivityIndicator (uma animação indicando que uma tarefa está em andamento);
+MapView (um mapa interativo);
+VideoPlayer (um player de vídeo).
+Aproveite para experimentar a library e brincar com os objetos disponíveis!
+
+https://developer.apple.com/documentation/swiftui/button
+
+@@05
+Corrigindo o layout modificadores de objetos
+
+Começamos a entender a estrutura de uma View em SwiftUI e aprendemos a utilizar a Vertical stack view, o empilhamento vertical de elementos, e a Horizontal stack view, o empilhamento de elementos na horizontal.
+Se compararmos o layout proposto inicialmente com o nosso preview, concluiremos que precisamos realizar algumas customizações de layout para atingir o resultado esperado.
+
+No protótipo, o botão de endereço está centralizado na parte superior da tela, gerando um espaçamento à esquerda e à direita, e o ícone de notificações fica no canto superior direito. Tendo isso em vista, a ideia é aprender a utilizar alguns modificadores nesses objetos para esse fim.
+
+Modificadores são métodos usados para alterar objetos, mudando o seu estado. Em outras palavras, é um trecho de código que altera as características de um botão, por exemplo, como sua cor ou o peso da fonte.
+Modificando o botão de endereço
+Começaremos alterando a fonte do botão de endereço. Logo abaixo do fechamento das chaves de Button("R. Vergueiro, 3185") {}, vamos digitar um ponto final (.) para chamar a função font().
+
+Dentro dos parênteses, digitando um ponto final novamente, conseguimos setar alguns tipos predefinidos de fonte. Utilizaremos o subheadline, o que diminuirá o tamanho da fonte do botão de endereço. Teremos: .font(.subheadline).
+
+Vamos aplicar outros modificadores nesse botão. Sua fonte no protótipo é um pouco mais pesada, em seminegrito. Para aplicar esse estilo na nossa implementação, aplicaremos o modificador fontWeight() com o valor semibold. Teremos: .fontWeight(.semibold).
+
+Em seguida, vamos alterar a cor da fonte de azul para preto. Para isso, usamos o modificador foregroundColor(). Digitando um ponto final entre os parênteses, temos um menu suspenso com várias cores que podemos utilizar. Vamos escolher black, resultando em: .foregroundColor(.black).
+
+Temos um detalhe importante: o botão está centralizado na tela, gerando um espaçamento à esquerda e à direita. Para aplicar esse espaçamento, temos um objeto de layout chamado Spacer(). O inserimos antes da declaração de Button("R. Vergueiro, 3185") para adicionar esse espaço antes, e também o adicionamos logo após os modificadores para adicionar o espaço depois:
+
+struct NavigationBar: View {
+    var body: some View {
+        HStack {
+            Spacer()
+            Button("R. Vergueiro, 3185") {
+
+            }
+            .font(.subheadline)
+            .fontWeight(.semibold)
+            .foregroundColor(.black)
+
+            Spacer()
+
+// código omitidoCOPIAR CÓDIGO
+Agora, o texto do primeiro botão está menor e mais pesado que o do segundo, além de preto e distante do segundo botão, bastante próximo do layout proposto.
+
+área de pré-visualização do Xcode. no simulador do iPhone 14, uma tela em branco com os botões ao centro vertical. o "R Vergueiro, 3185" está em preto, no centro horizontal. o "Notificações" está em azul, na lateral direita.
+
+Algo importante a salientar: quando estamos usando o Horizontal stack view, ele tenta preencher todo o espaço disponível na linha horizontal. Ou seja, se diminuirmos o título do segundo botão, "Notificações", os espaçamentos irão aumentar. O mesmo vale para o Vertical stack view.
+
+Modificando o botão de notificações
+No protótipo, o botão de notificações é representado por um ícone de sino vermelho. Na nossa pré-visualização, nosso botão está em texto.
+
+Quando queremos setar uma imagem em um botão, utilizamos outro inicializador para ele. Vamos apagar o valor de Button("Notificações") e selecionar outro construtor de botão: Button(action:label:). Nele, temos a ação e o rótulo.
+
+Nesse momento, não inseriremos nada no campo de ação. Então, apenas colocamos chaves depois dos dois pontos. Também podemos apagar o label. Dentro das chaves desse inicializador, podemos inserir a imagem.
+
+Essa imagem, na verdade, é um tipo de objeto do SwiftUI. Podemos declará-la com Image(), utilizando o inicializador que contém o systemName:. Ele, na verdade, é uma fonte renderizada como imagem.
+
+À frente dos dois pontos, passamos o nome do ícone que vamos utilizar. Sino é "bell" em inglês, e a fonte é: "bell.badge". Com isso, já podemos ver o ícone de sino no lugar de "Notificações" na pré-visualização, bastante parecido com o que precisamos implementar.
+
+Mas, esse ícone ainda está azul e muito pequeno em comparação ao layout proposto. Para alterar seu tamanho, podemos utilizar a mesma propriedade .font() que utilizamos no botão de endereço, passando title3 como seu valor: .font(.title3).
+
+Para finalizar, adicionaremos também o modificador foregroundColor() para alterar a cor, passando red (vermelho): .foregroundColor(.red):
+
+Button(action: {}) {
+    Image(systemName: "bell.badge")
+        .font(.title3)
+        .foregroundColor(.red)
+}COPIAR CÓDIGO
+Ótimo! Já temos algo bastante parecido com o que precisamos:
+
+área de pré-visualização do Xcode. no simulador do iPhone 14, uma tela em branco com os botões ao centro vertical. o "R Vergueiro, 3185" está em preto, no centro horizontal. o sino de notificações está em vermelho, na lateral direita.
+
+Algo que pode ser um pouco confuso é estarmos usando uma imagem em um botão mas alterando seu tamanho com o método .font(). A palavra "font" (fonte) geralmente remete a texto.
+
+Mas, na verdade, temos uma coleção de ícones nativa da Apple que podemos utilizar para renderizar em fontes. Ou seja, o ícone de sino bell.badge é, na realidade, uma fonte. Por isso conseguimos usar esse método para alterar o seu tamanho.
+
+Se você tiver curiosidade sobre quais são os outros ícones nativos da Apple, você pode conferir um aplicativo muito interessante chamado "Símbolos SF", que pode ser baixado na App Store. Ele possui uma biblioteca de ícones separados por categorias que podemos utilizar no nosso aplicativo, e que são renderizados como fonte.
+Alterando a pré-visualização
+Para finalizar, vamos alterar a pré-visualização setando a ocupação apenas do espaço disponível. Para isso, utilizaremos um modificador na segunda struct, chamado previewLayout(). Digitamos um ponto final dentro ele e chamamos o método sizeThatFits.
+
+Para que o preview ocupe apenas o espaço disponível, precisamos nos dirigir até o canto inferior esquerdo da área de pré-visualização e selecionar a opção "Selectable" (selecionável). Com isso, a pré-visualização vai diminuir, descartando o mockup, para ocupar o espaço disponível.
+
+Podemos melhorar isso um pouco mais aplicando um .padding(), ou seja, uma margem entre os elementos e as bordas. Podemos setar um padding à esquerda, ao topo, à direita ou na parte inferior. Quando não especificamos, ele seta um valor default para todas as bordas.
+
+struct NavigationBarView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationBarView()
+            .previewLayout(.sizeThatFits)
+            .padding()
+    }COPIAR CÓDIGO
+Com isso, essa é a pré-visualização da nossa NavigationBar:
+
+área de pré-visualização do Xcode. retângulo pequeno e branco com o botão "R. Vergueiro, 3185" ao centro e o sino vermelho de notificações no canto direito.
+
+O layout está bastante parecido com o proposto. A NavigationBar é um componente relativamente simples, mas bem interessante para introduzir o SwiftUI e começar a entender os fundamentos e os componentes principais, como botões, tipos de empilhamento e modificadores.
+
+A partir da próxima aula, implementaremos o Grid, o menu de opções logo abaixo da NavigationBar. Já temos alguns conceitos em mente para aplicar nesse novo componente!
+
+Nos encontramos lá!
+
+@@06
+Para saber mais: aprofundando os modificadores
+
+Como vimos em aula, no SwiftUI temos os modificadores, ou seja, pedaços de código que transformam e alteram as características básicas dos objetos. Por exemplo, posso usar um modificador para mudar a cor de um texto de preto para vermelho.
+Abaixo, você pode conferir os cinco principais modificadores que usamos em SwiftUI:
+
+Fonte:
+.font(.headline): define a fonte como uma fonte de destaque.
+.font(.system(size: 18)): define o tamanho da fonte como 18 pontos.
+Tamanho:
+.frame(width: 200, height: 50): define o tamanho da visualização para 200 pontos de largura e 50 pontos de altura.
+.aspectRatio(contentMode: .fit): ajusta a proporção da visualização para caber no espaço disponível.
+Peso:
+.fontWeight(.bold): define o peso da fonte como negrito.
+.fontWeight(.light): define o peso da fonte como leve.
+Cor:
+.foregroundColor(.blue): define a cor do texto ou da imagem como azul.
+.background(Color.gray): define a cor de fundo da visualização como cinza.
+Mostrar ícone:
+.imageScale(.large): ajusta o tamanho de uma imagem para grande.
+.iconColor(.red): define a cor do ícone como vermelho.
+Lembre-se de que cada objeto possui seus próprios modificadores. Por exemplo, os modificadores do text são diferentes do image. Um texto tem características como tamanho de fonte, estilo itálico e outras estilizações que são bem diferentes de uma imagem, certo? Então por isso há modificadores específicos para textos e outros para imagens.
+
+Se quiser, fique à vontade para brincar e explorar esses modificadores no seu Xcode e até descobrir outros!
+
+@@07
+Para saber mais: Symbols SF
+
+Para construir o botão de notificação da NavigationBar, utilizamos a biblioteca Symbols SF!
+A Apple disponibiliza uma biblioteca de mais de 4000 ícones que podemos utilizar em nossos projetos! O mais interessante, como mencionei, é que esses ícones são tratados como fontes, ou seja, podemos customizar o tamanho e cor bem facilmente com modificadores!
+
+Você pode acessar o link da Symbols SF e explorar a página.
+
+Bons estudos!
+
+https://developer.apple.com/sf-symbols/
+
+@@08
+Empilhando botões na vertical
+
+Em nossa primeira implementação no Chef Delivery, colocamos os botões lado a lado no aplicativo.
+Pensando agora em outro projeto, como um aplicativo de chat como o WhatsApp, como poderíamos fazer para colocar vários botões empilhados na vertical?
+
+O primeiro passo seria criar os objetos dos botões, conforme o código abaixo:
+
+Button() {
+    Text("Conversa 1")
+}
+
+Button() {
+    Text("Conversa 2")
+}
+
+Button() {
+    Text("Conversa 3")
+}
+COPIAR CÓDIGO
+A seguir, precisamos colocar um container nesses botões. O que aconteceria no código acima se utilizarmos o HStackView? Selecione as opções verdadeiras:
+
+Os botões seriam empilhados na vertical, então teríamos o resultado esperado.
+ 
+Alternativa correta
+Os botões seriam empilhados na horizontal pelo HStackView, então não teríamos o resultado esperado.
+ 
+Exatamente! Para empilhar elementos como uma lista vertical, não poderíamos utilizar o HStackView.
+Alternativa correta
+Seria melhor utilizar o VStackView, que empilharia os botões na vertical, como uma lista.
+ 
+Isso mesmo! Para empilhar elementos um embaixo do outro, usamos o VStack.
+Alternativa correta
+Os botões seriam empilhados na horizontal, então teríamos o resultado esperado.
+
+@@09
+Criando um botão azul com modificadores
+
+Até agora, criamos objetos (botões e textos) e modificamos eles!
+Mas, e se houvesse uma alteração no projeto? Às vezes, as cores de um projeto podem ser modificadas por questões de design da marca do produto.
+
+Qual seria a sintaxe (código) utilizada para criar um botão com duas características: fonte na cor azul e estilo negrito?
+
+Button("Botão azul") {
+    // Action
+}
+.foregroundColor(.blue)
+.fontWeight(.bold)
+ 
+Isso mesmo! Usamos o código button() para criar um botão. Em seguida, para modificar o botão e deixar ele na cor azul e com peso bold, utilizamos os modificadores .foregroundColor(.blue) para definir a cor da fonte como azul e .fontWeight(.bold) para definir o negrito.
+Alternativa correta
+Button("Botão azul") {
+    // Action
+}
+.style(fontColor: .blue, fontWeight: .bold)
+ 
+Alternativa correta
+Button("Botão azul") {
+    // Action
+}
+.configure(fontColor: .blue, fontWeight: .bold)
+ 
+Alternativa correta
+UIButton().font(.blue).bold()
+
+@@10
+Faça como eu fiz: construindo a NavigationBar do app
+
+Hora de colocar a mão na massa!
+É sua vez de construir a NavigationBar - a barra superior que vai ter o endereço e o ícone de notificações do app! Vou dar algumas dicas:
+
+Crie um arquivo para construir o NavigationBar;
+Utilize o objeto de botão;
+Lembre-se dos HStack e VStack;
+Aplique os modificadores e faça os ajustes necessários;
+Por fim, chame o arquivo do NavigationBar no arquivo que representa a tela inicial do app.
+O resultado esperado desta implementação é que o aplicativo tenha, na parte superior, uma barra com o endereço e um ícone de navegação, enquanto o resto da tela fica em branco.
+Vamos lá?
+
+O objetivo desta atividade é estimular a prática necessária para seu aprendizado!
+Você pode conferir o código do projeto até o momento através desta branch no GitHub.
+
+Se precisar de ajuda, chama a gente no fórum ou discord!
+
+https://github.com/alura-cursos/chef-delivery-parte1/tree/aula-2
+
+@@11
+O que aprendemos?
+
+Nessa aula, você aprendeu como:
+Criar a NavigationBar (barra superior) customizável;
+Organizar o projeto em pastas separadas para cada funcionalidade;
+Implementar o VStack e o HStack para empilhar elementos na vertical e horizontal, respectivamente;
+Aplicar modificadores para configurar a aparência dos botões;
+Utilizar ícones do sistema (SF Symbols) como um botão;
+Implementar o Spacer para ocupar espaços disponíveis em um HStack;
+Configurar o padding e o PreviewProvider para melhorar a pré-visualização.
+Concluímos a aula 1! Espero você na próxima aula!
