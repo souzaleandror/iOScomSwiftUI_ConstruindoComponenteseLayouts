@@ -1064,3 +1064,498 @@ Aplicar modificadores na imagem, como redimensionamento e espaçamento;
 Utilizar a view "GridItem" no "OrderTypesGridView" para exibir os tipos de restaurantes;
 Definir a quantidade de linhas no "LazyHGrid" para controlar a disposição e aparência dos itens.
 Na próxima aula, vamos finalizar o layout utilizando os componentes que criamos.
+
+#### 19/08/2023
+
+@04-Juntando peças do Grid
+
+@@01
+Projeto da aula anterior
+PRÓXIMA ATIVIDADE
+
+Você pode revisar o seu código e acompanhar o passo a passo do desenvolvimento do projeto e, se preferir, baixe o projeto da aula anterior.
+Bons estudos!
+
+https://github.com/alura-cursos/chef-delivery-parte1/archive/refs/heads/aula-3.zip
+
+@@02
+View de tipos de restaurantes
+
+Finalmente, podemos criar a view que vai representar cada item dentro do grid. A ideia é construir a visualização de ícone e texto para juntar o que fizemos até agora e criar o grid com todos os itens de tipos de restaurantes na parte superior do aplicativo.
+Criando nova view
+Para começar, vamos à pasta "GridView", clicar com o botão direito do mouse e selecionar "New File > SwiftUI View". Assim, criamos um novo arquivo de visualização. Clicamos no botão "Next" para prosseguir, nomeamos o arquivo como OrderTypeView e clicamos no botão "Create".
+
+OrderTyperView.swift:
+// OrderTypeView.swift
+// ChefDelivery
+//
+// Created by ALURA on 17/05/23.
+//
+
+import SwiftUI
+
+struct OrderTypeView: View {
+    var body: some View {
+        Text("Hello, World!")
+    }
+}
+
+struct OrderTypeView_Previews: PreviewProvider {
+    static var previews: some View {
+        OrderTypeView()
+    }
+}COPIAR CÓDIGO
+Já temos a estrutura que conhecemos desde o início do curso com a classe da OrderTypeView e também a parte da pré-visualização em OrderTypeView_Previews.
+
+Construir elemento
+Para construir esse item, é importante analisar o que cada item tem. No simulador, vamos fazer esse exercício de abstração juntos.
+
+Primeiro, temos um ícone e logo abaixo dele um título. Quando temos um elemento abaixo do outro, temos uma estrutura chamada vertical stack view. Vamos começar com essa estrutura.
+
+No XCode, vamos voltar no arquivo OrderTypeView.swift. Vamos deletar a linha Text("Hello, World!") da classe da view e, ao invés disso, declarar um vertical stack view ao escrever VStack {}.
+
+Também vamos passar alguns parâmetros na inicialização como um espaçamento entre os elementos de entre do stack view. Após a declaração VStack, vamos abrir parênteses e aceitar a sugestão de parâmetros desse inicializador com o atalho "Option + Enter".
+
+Nesse momento, vamos utilizar somente o spacing como 5. Por isso, apagamos os parâmetros alignment e content.
+
+struct OrderTypeView: View {
+    var body: some View {
+        VStack(spacing: 5)   {
+        }
+    }
+}
+
+// código omitido…COPIAR CÓDIGO
+Vamos trabalhar com uma imagem e um texto. Por isso, dentro de VStack, vamos declarar uma Image.
+
+Precisamos saber o nome da imagem de acordo com o elemento que estiver percorrendo na lista ordersMock no ForEach que criamos na classe OrderTypeGridView.
+
+Ou seja, o primeiro elemento da lista é Restaurantes, a imagem é de um hamburguer. Já o segundo elemento é o Mercado e a imagem é de mercado. Para cada elemento iterado no loop, vamos pegar a imagem correspondente.
+
+Para configurar isso, podemos pedir como parâmetro esse objeto que o ForEach estiver percorrendo no momento. Para isso, declaramos uma constante let chamada orderType do tipo orderType.
+
+Assim, podemos utilizar esse objeto dentro da Image. Em Image(), vamos inicializar passando o nome orderType.image.
+
+Quando trabalhamos com uma struct e declaramos uma constante ou variável, ela é acrescentada automaticamente no inicializador dessa struct. Por isso, que a pré-visualização sugere que coloquemos um objeto do tipo OrderType.
+
+Como apenas trabalhamos com a pré-visualização e não são os mocks verdadeiros, podemos declarar um item só para fazer o código funcionar. Entre parênteses de OrderType(), colocamos o primeiro exemplo do restaurante.
+
+O id é um int 1, o name é uma string Restaurantes e o image é uma string hamburguer.
+
+struct OrderTypeView: View {
+    let orderType: OrderType
+
+    var body: some View {
+        VStack(spacing: 5)   {
+            Image(orderType.image) 
+        }
+    }
+}
+
+struct OrderTypeView_Previews: PreviewProvider {
+    static var previews: some View {
+        OrderTypeView(orderType: OrderType(id: 1,
+                                           name: "Restaurantes",
+                                           image: "hamburguer"))
+    }
+}COPIAR CÓDIGO
+Dessa forma, o erro de compilação para de ser apontado. E, no preview layout à direita do código, já temos um ícone de hambúrguer que representa o OrderType declarado na classe.
+
+Além da imagem, temos o texto. Abaixo de Image, vamos declarar um Text() que vai ser utilizado a partir do nome do objeto orderType. Ou seja, orderType.name.
+
+Com isso, já temos uma estrutura mais parecida com o que precisamos montar no grid: ícone de hambúrguer seguido do texto "restaurantes".
+
+A classe OrderTypeView representa cada item de dentro do grid. Assim, dentro do ForEach, vamos utilizar essa classe para criar o grid.
+
+Mas, podemos melhorar essa visualização ao pedir que o item ocupe apenas o espaço necessário. Para isso, na pré-visualização, logo abaixo do OrderTypeView, vamos dar um .previewLayout() e escolher a opção sizeThatFits.
+
+struct OrderTypeView: View {
+    let orderType: OrderType
+
+    var body: some View {
+        VStack(spacing: 5)   {
+            Image(orderType.image)
+            Text (orderType.name)
+        }
+    }
+}
+
+struct OrderTypeView_Previews: PreviewProvider {
+    static var previews: some View {
+        OrderTypeView(orderType: OrderType(id: 1,
+                                           name: "Restaurantes",
+                                           image: "hamburguer"))
+        .previewLayout(.sizeThatFits)
+    }
+}COPIAR CÓDIGO
+Agora, precisamos clicar na opção "Selectable" (selecionável) no canto inferior esquerdo do preview layout. Assim, é renderizado somente o espaço necessário para montar essa view.
+
+Customizar elementos
+Vamos entrar com alguns modificadores para customizar esses elementos.
+
+Em Image, vamos colocar o modificador .resizable() que permite que a imagem seja redimensionada, ocupando todo o espaço disponível no layout.
+
+Porém, o problema é que a imagem fica distorcida e com um tamanho maior que o necessário, como percebemos pela preview. Isso acontece porque não configuramos uma altura e largura para o vertical stack view.
+
+Para corrigir esse problema, abaixo de VStack, vamos digitar .frame() e passar as informações de tamanho. Passamos a largura (width) como 70 e a altura (height) como 100.
+
+Vamos continuar a aplicar outros modificadores na Image. Abaixo de resizable, vamos colocar o .scaledToFit() que serve para redimensionar a imagem proporcionalmente e se encaixe no espaço disponível.
+
+Caso você não esteja utilizando uma imagem que já venha com a borda arrendondada, você pode utilizar uma propriedade chamada .cornerRadius() para arrendondar os cantos.
+No nosso caso, não precisamos pois já temos as imagens com bordas arrendondadas. Por isso, não vamos colocar esse modificador.
+
+Por fim, vamos passar o último parâmetro de imagem que é o .fixedSize() onde podemos definir uma largura fixa para só para a horizontal, vertical ou ambas.
+
+Nesse caso, vamos definir um eixo com uma largura fixa e o outro com uma largura que pode ser ajustada de acordo com o tamanho disponível. Para isso, colocamos horizontal como false para não ter tamanho fixo. E colocamos a vertical como true para ter uma altura fixa.
+
+struct OrderTypeView: View {
+    let orderType: OrderType
+
+    var body: some View {
+        VStack(spacing: 5)   {
+                Image(orderType.image)
+                .resizable()
+                .scaledToFit()
+                //.cornerRadius(10)
+                .fixedSize (horizontal: false, vertical: true)
+            Text (orderType.name)
+        }
+        .frame (width: 70, height: 100)
+    }
+}
+
+// código omitido…COPIAR CÓDIGO
+Esses são modificadores que vamos utilizar ao longo do curso e com os quais você vai se familiarizar.
+
+Agora falta aplicar alguns modificadores para configurar o texto de acordo com o layout proposto.
+
+Basicamente, só vamos alterar o tamanho da fonte. Para isso, abaixo de Text(), digitamos .font(), utilizando a fonte do próprio sistema com tamanho 10. Ou seja, .system(size: 10).
+
+Confira como ficou o código completo:
+
+struct OrderTypeView: View {
+    let orderType: OrderType
+
+    var body: some View {
+        VStack(spacing: 5)   {
+                Image(orderType.image)
+                .resizable()
+                .scaledToFit()
+                .fixedSize (horizontal: false, vertical: true)
+            Text (orderType.name)
+                .font(.system(size: 10))
+        }
+        .frame (width: 70, height: 100)
+    }
+}
+
+struct OrderTypeView_Previews: PreviewProvider {
+    static var previews: some View {
+        OrderTypeView(orderType: OrderType(id: 1,
+                                           name: "Restaurantes",
+                                           image: "hamburguer"))
+        .previewLayout(.sizeThatFits)
+    }
+}COPIAR CÓDIGO
+Podemos clicar novamente no botão "Selectable" do preview layout para visualizar o resultado da estrutura.
+
+Pré-visualização de ícone de cantos arrendondados de um hambúrguer com a inscrição "Restaurantes" logo abaixo.
+
+Já temos o grid item necessário para montar o grid view. No próximo vídeo, vamos terminar esse componente.
+
+@@03
+Escrevendo o código do GridItem
+PRÓXIMA ATIVIDADE
+
+Até aqui, na construção do projeto Chef Delivery, tínhamos implementado a view OrderTypeGridView, certo?
+A seguir, construímos uma nova view - a OrderTypeView:
+
+struct OrderTypeView: View { 
+    let orderType: OrderType
+
+    var body: some View { 
+            VStack(spacing: 5)  { 
+                Image(orderType.image) 
+                        .resizable()
+                        .scaledToFit()
+                        .fixedSize (horizontal: false, vertical: true)
+                Text (orderType.name) 
+                        .font(.system(size: 10))
+            } 
+            .frame (width: 70, height: 100)
+        }
+} 
+COPIAR CÓDIGO
+Novamente, uma das pessoas dev envolvidas no projeto ficaram em dúvida a essas views e quais as funções de cada uma.
+
+Considerando o código acima, selecione as alternativas verdadeiras:
+
+Para ajustar o tamanho do GridItem e deixá-lo de acordo com o layout recebido, utilizamos o modificador .frame (width: 70, height: 100) em que width configura a altura e o height a largura.
+ 
+Alternativa correta
+Para deixar o tamanho da imagem do GridItem de acordo com o layout recebido, usamos os modificadores como .resizable(), .scaledToFit() e .fixedSize.
+ 
+Exatamente! É isso mesmo:
+O resizable é usado para deixar a imagem "redimensionável”;
+O ScaledToFit é utilizado para ajustar a imagem dentro do espaço disponível;
+O fixedSize é empregado para definir um tamanho fixo para a imagem.
+Alternativa correta
+O arquivo OrderTypeView monta toda a estrutura e o layout do grid com as categorias de restaurante do app.
+ 
+Alternativa correta
+Para formatar o título de GridItem e deixá-lo de acordo com o layout recebido, usamos os modificadores como .resizable(), .scaledToFit() e .fixedSize.
+ 
+Alternativa correta
+O arquivo OrderTypeView e o código dentro dele é responsável por desenhar o layout do componente GridItem que contém a "célula" com a imagem e o título do tipo de restaurante.
+ 
+Exatamente! A OrderTypeView monta apenas o layout do bloquinho de cada um dos itens do GridItem.
+Alternativa correta
+O GridItem da OrderTypeView será utilizado, posteriormente, na View OrderTypeGridView para montar o grid completo com as categorias de restaurante do app.
+ 
+Exatamente! O OrderTypeGridView organiza a estrutura geral do grid, enquanto o OrderTypeView monta o layout de cada um dos itens do grid e, dessa forma, será utilizado no OrderTypeGridView.
+
+@@05
+Empregando o layout do GridItem
+PRÓXIMA ATIVIDADE
+
+Com a OrderTypeView (que contém o layout do GridItem) finalizada, é necessário configurar esse layout na estrutura do Grid para finalizar mais uma tarefa do aplicativo Chef Delivery!
+Imagem que mostra o grid de restaurantes com as opções de restaurantes, farmácia, descontos, gourmet, mercado, pet e bebidas
+
+Como podemos fazer essa implementação para incluir o layout da OrderTypeView (ou seja, do GridItem) na estrutura da OrderTypeGridView?
+
+Considere que o Roberto, um dos integrantes do time, escreveu uma parte do código e enviou para você completá-la.
+
+var gridLayout: [] { 
+        return Array(repeating: GridItem(.flexible(), spacing: 10),
+                count: 2)
+} 
+
+var body: some View { 
+        LazyHGrid(rows: gridLayout, spacing:15) {
+                ForEach(ordersMock) { orderItem in
+                        (orderType: orderItem)
+COPIAR CÓDIGO
+Assim, selecione os trechos de código que corretamente vão gerar o grid de tipos de restaurantes:
+
+É necessário adicionar outros modificadores de posicionamento e tamanho para deixar o layout correto.
+ 
+É isso aí! Precisamos adicionar modificadores para arrumar os espaçamentos e posicionamentos.
+Alternativa correta
+Precisamos de um grid flexível (gridLayout) e, na segunda linha do código, antes do Array, precisamos escrever GridItem para receber o layout do GridItem que está na OrderTypeView. Também precisamos inserir a OrderTypeView (que contém o GridItem) dentro do forEach.
+ 
+Alternativa correta
+Não é necessário adicionar outros modificadores de posicionamento e tamanho, pois, com o código feito pelo Roberto, o layout já estará correto.
+ 
+Alternativa correta
+Precisamos chamar a OrderTypeView dentro do ForEach, pois ele vai percorrer o Array do gridLayout para gerar o grid.
+ 
+Exatamente! É necessário instanciar uma view do tipo OrderTypeView a cada iteração dentro do ForEach.
+Alternativa correta
+Precisamos de um grid flexível (gridLayout) e, na primeira linha do código, dentro das chaves, precisamos escrever [GridItem] para receber o layout do GridItem. Também precisamos inserir o OrderTypeView (que contém o GridItem) dentro do forEach.
+ 
+É verdadeiro que precisamos escrever GridItem logo após o gridLayout. No entanto, é falso que devemos inserir o GridItem dentro do forEach dentro de LazyHGrid, pois isso geraria um erro de código.
+
+@@06
+Juntando as peças do Grid
+
+Para finalizar essa aula, vamos juntar os componentes que criamos até agora: o navigation bar e o grid de itens. Desse modo, agregamos esses componente na home para visualizar a aparência do aplicativo de entrega de refeições.
+Juntar componentes
+Para isso, vamos em "App > ContentView.swift". Nesse arquivo, estávamos utilizamos uma view para teste. Podemos apagar os dois Text("Teste").
+
+Assim, dentro do VStack(), podemos colocar o NavigationBar(). Mas, repare que fica um espaço muito pequeno entre o ícone de sino de notificação e a borda da direita. Vamos ajustar esse detalhe com padding horizontal.
+
+Na próxima linha, digitamos .padding(.horizontal, 15) para deixar uma margem de 15 no lado esquerdo e direito.
+
+ContentView.swift:
+struct ContentView: View {
+    var body: some View {
+        VStack {
+            NavigationBar()
+                .padding(.horizontal, 15)
+        }
+    }
+}
+
+// código omitido…
+COPIAR CÓDIGO
+Agora, vamos colocar o componente de grid. Mas, antes devemos entender o conceito de componente:
+
+Um componente é formado por vários objetos.
+Por exemplo, o OrderTypeView() contém objetos como imagens (Image) e textos (Text) que estão dentro de um vertical stack view. Por isso, o grid item forma um componente quando criamos um grid view.
+
+Geralmente, uma tela inicial de um aplicativo pode ter diversas informações. Na home de aplicativos de entrega de refeições ou de entregas de produtos para animais de estimação existem diversos componentes, como banners, grids, listagens, entre outros.
+
+Pode ser que esses componentes não tenham o tamanho total da tela disponível. Ou seja, coloquemos componentes que não caibam na tela.
+
+Nesses casos, é interessante utilizar um componente chamado Scroll que é um contâiner onde podemos colocar os componentes dentro. Caso não caiba na tela, conseguimos fazer uma rolagem para visualizar os itens que estão mais abaixo.
+O Scroll funciona tanto na vertical quanto na horizontal. Dessa forma, se temos um menu com muitas opções na horizontal, também podemos colocar esse contâiner.
+
+Não vamos colar o NavigationBar dentro do Scroll, porque queremos deixá-lo físico na parte superior do simulador.
+
+Por isso, abaixo de NavigationBar(), vamos colocar um ScrollView() que tem um inicializador que escolhemos com o atalho "Option + Enter". Dessa maneira, ele pede um eixo horizontal ou vertical. No nosso caso, vamos colocar .vertical.
+
+Em seguida, temos o parâmetro showIndicators que é uma barra que aparece do lado do scroll para indicar que tem a rolagem. Não vamos querer esse componente visual, por isso, colocamos um valor booleano de false.
+
+Dentro do ScrollView, vamos colocar um VStack para colocar o componente OrderTypeGridView().
+
+struct ContentView: View {
+    var body: some View {
+        VStack {
+            NavigationBar()
+                .padding(.horizontal, 15)
+
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack {
+                    OrderTypeGridView()
+                }
+            }
+        }
+    }
+}
+
+// código omitido…
+COPIAR CÓDIGO
+Com isso, juntamos os componentes que criamos até agora na home do aplicativo de entrega de refeições. A ideia é agregar mais componentes a cada aula para formar a página inicial do app.
+
+Recorte de barra de navegação com o endereço "R. Vergueiro, 3185" e um ícone de sino de notificações alinhado à esquerda. Abaixo, uma grade de duas linhas com ícones de categorias de navegação e seus respectivos nomes: Restaurantes, Farmácia, Descontos, Gourmet, Mercado, Pet, Bebidas.
+
+Até agora temos o navigation bar e o grid. E, na próxima aula, vamos continuar com novas implementações no projeto.
+
+@@07
+Para saber mais: entendendo a lógica de objetos e componentes em Swift UI
+PRÓXIMA ATIVIDADE
+
+No dia a dia de trabalho de uma pessoa que desenvolve aplicativos para sistemas iOS, da Apple, é importante dominar alguns conceitos que facilitam a vida e ajudam na prática de escrita e desenvolvimento de código - e, claro, na organização, manutenção e agilidade do projeto!
+Resumo dos pontos importantes que você deve dominar
+Ao concluir este curso, é importante que você tenha entendido a lógica de construção de layouts em um app no SwiftUI.
+
+Perceba como fomos segmentando e divindo as features em partes (views, arquivos e pastas) e criando “blocos de código” que juntamos depois na view da tela home.
+
+E tem mais: trabalhamos com dois conceitos importantes - objeto e componente. Vamos definir isso melhor agora:
+
+Objetos são mini-blocos de código (estruturas menores) como o Image (que mostra uma imagem), Text (que mostra um texto) e até mesmo as views são consideradas objetos.
+Componentes são o agrupamento de vários objetos que formam estruturas maiores - como a NavigationBar e o Grid de tipos de restaurantes. Por exemplo, o componente NavigationBar é composto por vários objetos (Text do endereço, o text do ícone e os modificadores de espaçamento e posição na tela).
+A imagem abaixo ajuda a ilustrar esses termos técnicos:
+
+Infográfico que explica os conceitos de objeto e componente. No topo, há o título “Entendendo como construir aplicativos em Swift UI” acompanhado do subtítulo “O que são objetos e componentes”. Abaixo, no lado direito da imagem, há a imagem de um bloco seguido dos textos “Objeto”, “image” e “text”. No lado direito, há vários blocos empilhados seguidos dos textos “Componente”, “NavigationBar”, “Grid etc”
+
+Agora, vamos entender isso de forma mais aprofundada!
+
+Mergulhando mais fundo
+Já sabemos que, até aqui, construímos dois componentes principais no Chef Delivery:
+
+A NavigationBar que contém o texto de endereço e o ícone de notificação;
+magem que mostra a NavBar com o título “Rua Vergueiro, 3185 e um ícone de notificação com um sino
+
+O Grid de categorias de restaurantes que contém um texto e uma imagem.
+Imagem que mostra o grid de restaurantes com as opções de restaurantes, farmácia, descontos, gourmet, mercado, pet e bebidas
+
+Como já dissemos, ao longo do desenvolvimento do app, fomos dividindo esses componentes em componentes menores e, depois, fomos juntando eles em algumas views.
+
+Por exemplo, no caso do Grid, temos duas views:
+
+OrderTypeGridView: nessa view, temos um componente que constrói a estrutura do grid;
+OrderTypeView: é essa view que tem o componente que desenha o layout de cada uma das “células” do grid.
+Assim, utilizamos o “sub-componente” da OrderTypeView (layout do grid) dentro da OrderTypeGridView (estrutura maior do grid).
+
+Em seguida, pegamos o grid e utilizamos ele na HomeView, ou seja, na tela do app.
+
+Percebe como fomos juntando “blocos” em cima de “blocos” para construir a tela inicial do Chef Delivery?
+
+Temos vários componentes que estão modularizados, ou seja, separados em pastas distintas.
+
+Agora que entendemos isso de forma prática, é importante reforçar dois termos técnicos principais: objeto e componente.
+
+Objeto:
+Em Swift e SwiftUI, de forma simples, temos vários objetos que podemos utilizar como blocos menores para construir componentes, como o Text, o Image e até mesmo as Views!
+
+Pense no objeto como um átomo que, quando se junta com outros objetos, forma um componente (uma molécula, que é um conjunto de objetos).
+Falando de forma mais técnica, um objeto é uma instância de uma classe, estrutura ou enumeração que encapsula dados e comportamentos relacionados, ou seja, organiza dados para que eles cumpram uma comportamento específico, por exemplo, mostrar uma imagem na tela (como o Image).
+
+Os objetos são a base da programação orientada a objetos, e eles representam entidades do mundo real ou conceitos abstratos em um aplicativo, como uma lista de restaurantes, por exemplo.
+
+Por último, no contexto do SwiftUI, as views também são objetos, pois encapsulam a aparência e o comportamento de uma parte específica da interface do usuário.
+
+Componente:
+Um componente é um bloco de construção maior (contrastando com o objeto que é um bloco menor) que encapsula e contém um conjunto de funcionalidades relacionadas e pode ser usado em várias partes de um aplicativo.
+
+Um exemplo disso é a NavigationBar: ela tem as funcionalidades de mostrar o endereço e o ícone de notificação e, também, é reutilizada na tela Home.
+
+Em SwiftUI, um componente geralmente é implementado como uma view personalizada. Ele pode conter outras view - como a tela Home que contém as view da NavigationBar e do Grid de tipos de restaurantes.
+
+A criação de componentes ajuda a modularizar e organizar o código, tornando-o mais legível e fácil de manter. Pois, imagine se construíssemos todo o aplicativo dentro de uma única view? Teríamos um código gigantesco e seria muito difícil localizar informações dentro dele! É por isso que modularizamos (dividimos, separamos) o código em várias pastas que cumprem, cada uma delas, uma responsabilidade específica.
+
+Componentização:
+Não se preocupe com este conceito neste momento, não é nosso foco.
+A componentização é o processo de dividir um aplicativo em componentes menores e independentes. Cada view contém um componente fica responsável por uma funcionalidade e pode ser reutilizado em diversas partes do projeto, dispensando a necessidade de repetir, diversas vezes, um trecho de código.
+
+Qual a vantagem de fazer isso?
+
+Manutenção: fica mais fácil consertar bugs e localizar as funcionalidades dentro do projeto;
+Flexibilidade de trabalho: equipes diferentes conseguem trabalhar em diferentes funcionalidades ao mesmo tempo;
+Otimização: o código fica mais limpo e isso melhora o desempenho do app!
+Faz sentido?
+
+Relação com as Views e criação de pastas e arquivos:
+No SwiftUI, as view são importantíssimas para a construção da interface do usuário (a tela do app).
+
+Ao criar um aplicativo, é comum criar uma hierarquia de view que representam diferentes elementos visuais, como botões, listas, caixas de texto, etc. Essas view podem ser organizadas em pastas e arquivos para melhorar a organização e a legibilidade do projeto - como estamos fazendo com o Chef Delivery!
+
+Por exemplo, você pode criar uma pasta chamada "Components" para armazenar as view personalizadas/componentes reutilizáveis do seu aplicativo. Dentro dessa pasta, você pode criar arquivos para cada componente específico. Cada arquivo conterá a definição da view personalizada, juntamente com qualquer lógica adicional necessária. Dessa forma, você pode facilmente localizar e reutilizar componentes em diferentes partes do seu aplicativo. Em nosso projeto, fica muito mais fácil localizar o Grid de tipo de restaurantes, por exemplo.
+
+A criação de pastas e arquivos também é útil para organizar outros elementos do projeto, como recursos gráficos (nossa pasta de assets que contém as imagens dos restaurantes) e modelos de dados (o mock com o título e imagem de um restaurante).
+
+Portanto, no SwiftUI, as views desempenham, ao mesmo tempo, o papel de objetos e componentes, e a criação de pastas e arquivos ajuda na organização dos componentes personalizados e de outros elementos do projeto. Esses conceitos são fundamentais para criar aplicativos SwiftUI bem estruturados, reutilizáveis e fáceis de dar manutenção - o que é essencial para que qualquer pessoa entenda o código e consiga trabalhar bem com ele.
+
+Parabéns se você leu até aqui! Dominar esses termos técnicos também é importante para que sua prática como dev seja cada vez mais refinada!
+
+@@08
+Para saber mais: mergulhando fundo em Grid e GridItem
+PRÓXIMA ATIVIDADE
+
+Se você quiser se aprofundar nas possibilidades do Grid e do GridItem, acesse a documentação sobre Grid e GridItem. Aproveite para ler e explorar e, quem sabem tentar uma nova implementação com o Xcode.
+Você pode aprofundar nesses detalhes após concluir o curso.
+
+Bons estudos!
+
+https://developer.apple.com/documentation/swiftui/grid
+
+https://developer.apple.com/documentation/swiftui/griditem
+
+@@09
+Faça como eu fiz: finalizando a segunda parte do Grid com o GridItem
+PRÓXIMA ATIVIDADE
+
+Hora de colocar a mão na massa!
+É sua vez de criar o GridItem que será encarregado de representar cada restaurante dentro do GridView. Em seguida, é importante fazer o Grid percorrer todos os restaurantes e montar o layout com o orderTypeView! Para fazer isso, vou dar algumas dicas:
+
+Crie uma classe SwiftUI OrderTypeView para desenvolver o layout de cada restaurante;
+Utilize construtores da VStack;
+Utilize parâmetros da struct para recuperar a imagem do "orderType";
+Configure modificadores para estilizar a imagem;
+Implemente o orderTypeView dentro do forEach de mocks ao invés do texto que tínhamos;
+Estilize o LazyHGrid para espaçar melhor os items;
+Implemente o Grid no ContentView com ScrollView.
+O resultado esperado é que, após essa implementação, ao iniciar o app, ele deve renderizar os componentes visuais corretamente, com a NavigationBar no topo e logo abaixo um Grid com todos os restaurantes que estão no nosso arquivo de mock. Na próxima aula, continuaremos implementando nosso layout com o CarouselView.
+Vamos lá?
+
+O objetivo desta atividade é estimular a prática necessária para seu aprendizado!
+Você pode conferir o código do projeto até o momento através desta branch no GitHub.
+
+Se precisar de ajuda, chama a gente no fórum ou discord!
+
+https://github.com/alura-cursos/chef-delivery-parte1/tree/aula-4
+
+@@10
+O que aprendemos?
+PRÓXIMA ATIVIDADE
+
+Nessa aula, você aprendeu como:
+Entender o problema a ser resolvido - mostrar as categorias de restaurantes na tela usando um grid;
+Adicionar a pasta de assets que contém as imagens a serem usadas;
+Construir a view do GridItem usando modificadores como .resizable(), .scaledToFit(), .cornerRadius() e .fixedSize();
+Utilizar ScrollView para renderizar listas que podem ser movimentadas;
+Finalizar o GridView para mostrar um grid com as categorias de restaurantes.
+Na próxima aula, você vai aprender a criar um carrossel para apresentar imagens no app.
+
+Nos vemos em breve!
