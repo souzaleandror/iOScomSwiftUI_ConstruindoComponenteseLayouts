@@ -1071,7 +1071,6 @@ Na próxima aula, vamos finalizar o layout utilizando os componentes que criamos
 
 @@01
 Projeto da aula anterior
-PRÓXIMA ATIVIDADE
 
 Você pode revisar o seu código e acompanhar o passo a passo do desenvolvimento do projeto e, se preferir, baixe o projeto da aula anterior.
 Bons estudos!
@@ -1265,7 +1264,6 @@ Já temos o grid item necessário para montar o grid view. No próximo vídeo, v
 
 @@03
 Escrevendo o código do GridItem
-PRÓXIMA ATIVIDADE
 
 Até aqui, na construção do projeto Chef Delivery, tínhamos implementado a view OrderTypeGridView, certo?
 A seguir, construímos uma nova view - a OrderTypeView:
@@ -1316,7 +1314,6 @@ Exatamente! O OrderTypeGridView organiza a estrutura geral do grid, enquanto o O
 
 @@05
 Empregando o layout do GridItem
-PRÓXIMA ATIVIDADE
 
 Com a OrderTypeView (que contém o layout do GridItem) finalizada, é necessário configurar esse layout na estrutura do Grid para finalizar mais uma tarefa do aplicativo Chef Delivery!
 Imagem que mostra o grid de restaurantes com as opções de restaurantes, farmácia, descontos, gourmet, mercado, pet e bebidas
@@ -1423,7 +1420,6 @@ Até agora temos o navigation bar e o grid. E, na próxima aula, vamos continuar
 
 @@07
 Para saber mais: entendendo a lógica de objetos e componentes em Swift UI
-PRÓXIMA ATIVIDADE
 
 No dia a dia de trabalho de uma pessoa que desenvolve aplicativos para sistemas iOS, da Apple, é importante dominar alguns conceitos que facilitam a vida e ajudam na prática de escrita e desenvolvimento de código - e, claro, na organização, manutenção e agilidade do projeto!
 Resumo dos pontos importantes que você deve dominar
@@ -1511,7 +1507,6 @@ Parabéns se você leu até aqui! Dominar esses termos técnicos também é impo
 
 @@08
 Para saber mais: mergulhando fundo em Grid e GridItem
-PRÓXIMA ATIVIDADE
 
 Se você quiser se aprofundar nas possibilidades do Grid e do GridItem, acesse a documentação sobre Grid e GridItem. Aproveite para ler e explorar e, quem sabem tentar uma nova implementação com o Xcode.
 Você pode aprofundar nesses detalhes após concluir o curso.
@@ -1524,7 +1519,6 @@ https://developer.apple.com/documentation/swiftui/griditem
 
 @@09
 Faça como eu fiz: finalizando a segunda parte do Grid com o GridItem
-PRÓXIMA ATIVIDADE
 
 Hora de colocar a mão na massa!
 É sua vez de criar o GridItem que será encarregado de representar cada restaurante dentro do GridView. Em seguida, é importante fazer o Grid percorrer todos os restaurantes e montar o layout com o orderTypeView! Para fazer isso, vou dar algumas dicas:
@@ -1548,7 +1542,6 @@ https://github.com/alura-cursos/chef-delivery-parte1/tree/aula-4
 
 @@10
 O que aprendemos?
-PRÓXIMA ATIVIDADE
 
 Nessa aula, você aprendeu como:
 Entender o problema a ser resolvido - mostrar as categorias de restaurantes na tela usando um grid;
@@ -1559,3 +1552,598 @@ Finalizar o GridView para mostrar um grid com as categorias de restaurantes.
 Na próxima aula, você vai aprender a criar um carrossel para apresentar imagens no app.
 
 Nos vemos em breve!
+
+@05-Criando o carrossel de imagens
+
+@@01
+Projeto da aula anterior
+PRÓXIMA ATIVIDADE
+
+Você pode revisar o seu código e acompanhar o passo a passo do desenvolvimento do nosso projeto e, se preferir, pode baixar o projeto da aula anterior.
+Bons estudos!
+
+https://github.com/alura-cursos/chef-delivery-parte1/archive/refs/heads/aula-4.zip
+
+@@02
+Inserindo a primeira imagem do carrossel
+
+A próxima funcionalidade que iremos desenvolver será um banner de propagandas de restaurantes e estabelecimentos. A ideia é criar esse componente para mostrar as imagens como um carousel (carrossel) de fato.
+Dividiremos esse processo em 2 partes: a primeira delas será criar de fato a view que irá representar a imagem; a segunda será criar o componente que funcionará como um carousel.
+
+Nesse vídeo, trabalharemos a primeira parte, criando uma view que represente cada imagem do banner.
+
+Inserindo a primeira imagem do carousel
+Já nos acostumamos a separar cada funcionalidade (feature) por pasta; nesse caso, faremos o mesmo. Então, no menu lateral esquerdo da interface, vamos clicar sobre a pasta "ChefDelivery" com o botão direito e selecionar a opção "New Group" ("Novo Grupo").
+
+Nomearemos a nova pasta como "CarouselView". Para manter a ordem de implementação, vamos movê-la para a 5ª posição na lista, abaixo da pasta "GridView".
+
+Dentro dessa pasta, criaremos um novo arquivo ("New File…") que será a view. Na janela "Choose a template for your new file:", manteremos selecionada a opção "SwiftUI View" como User Interface. Após clicar em "Next" para avançar, vamos renomear a view como CarouselItemView.swift. Podemos clicar em "Create" e em seguida "Finish" para finalizar a ação.
+
+Feito isso, teremos a estrutura do SwiftUI, com a qual estamos nos familiarizando:
+
+import SwiftUI
+
+struct CarouselItemView: View {
+    var body: some View {
+        Text("Hello, World!")
+    }
+}
+
+struct CarouselItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        CarouselItemView()
+    }
+}
+COPIAR CÓDIGO
+Na linha 5, é trazido o texto "Hello, World!". Não vamos utilizá-lo, então podemos apagar.
+Essa view será bastante simples. Conforme dito no início do vídeo, ela irá apenas acomodar uma imagem. A partir disso, vamos aplicar alguns modificadores para deixar a imagem redonda e redimensionada no tamanho disponível. Faremos isso agora!
+
+Declarando uma imagem
+Para começar, vamos declarar uma imagem com o inicializador Image() na linha de código 5, onde antes havia o texto. Entre parênteses, precisamos passar o nome da imagem.
+
+Na pasta "Assets", temos uma subpasta chamada "Carousel" contendo 3 imagens:
+
+barbecue-banner (Imagem de um churrasco);
+brazilian-meal-banner (Imagem de um prato feito);
+pokes-banner (Imagem de uma salada).
+Podemos utilizar qualquer uma delas para criar o primeiro elemento do banner. Como não temos referência de nenhum objeto que tenha essa imagem, precisamos criar uma constante que chamaremos de OrderType, classe que criamos e trabalhamos anteriormente.
+
+Para isso, após a estrutura struct, usamos a palavra-chave let para declarar a constante order, que será do tipo OrderType. Essa classe contém basicamente um ID, um nome, e uma imagem. Nesse caso específico, não precisamos utilizar o nome, diferente do grid, por exemplo. No banner, são necessários apenas o ID, para identificar cada banner, e a imagem.
+
+import SwiftUI
+
+struct CarouselItemView: View {
+    
+    let order: OrderType
+    
+    var body: some View {
+        Image()
+    }
+}
+
+struct CarouselItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        CarouselItemView()
+    }
+}
+COPIAR CÓDIGO
+Quando declaramos uma constante, a área de pré-visualização nos solicita a inclusão desse parâmetro na inicialização da view (CarouselItemView()). Ou seja, sempre que precisarmos utilizar o CarouselItemView, será necessário passar por parâmetro um objeto do tipo OrderType.
+
+import SwiftUI
+
+struct CarouselItemView: View {
+    
+    let order: OrderType
+    
+    var body: some View {
+        Image()
+    }
+}
+
+struct CarouselItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        CarouselItemView(order: OrderType)
+    }
+}
+COPIAR CÓDIGO
+Em seguida, vamos inicializá-lo. Nesse momento, podemos passar qualquer valor de id, name e image (entre as 3 que visualizamos anteriormente), pois é apenas uma simulação.
+
+Então, vamos definir o id como 1; o name será uma string vazia (""), pois não vamos utilizá-lo; e para image, copiaremos o nome do primeiro arquivo na pasta "Assets" (barbecue-banner) e colaremos entre aspas.
+
+Agora, podemos passar a expressão order.image entre os parênteses de Image(), correspondente à imagem do banner, que definimos como fixa por enquanto.
+
+import SwiftUI
+
+struct CarouselItemView: View {
+    
+    let order: OrderType
+    
+    var body: some View {
+        Image(order.image)
+    }
+}
+
+struct CarouselItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        CarouselItemView(order: OrderType(id: 1, name: "", image: "barbecue-banner"))
+    }
+}
+COPIAR CÓDIGO
+Já conseguimos ter uma visualização na área de prévia:
+
+Simulador Android de fundo branco contendo um banner vinho retangular no centro. Nesse banner, temos a imagem de uma carne à esquerda, e o texto "Domingo é dia de CHURRASCO" à direita, com um círculo amarelo logo abaixo contendo a inscrição "Tudo até R$30".
+
+Aplicando modificadores
+Quando trabalhamos com imagem, precisamos nos atentar ao seguinte ponto: nem sempre todas as imagens virão do mesmo tamanho. Isso seria o ideal para evitar problemas, mas às vezes, podemos receber imagens com tamanhos menores ou maiores.
+
+Nesse cenário, o ideal é aplicar alguns modificadores logo abaixo de Image(), para garantir que a imagem não irá extrapolar a área que temos disponível.
+
+O primeiro modificador que iremos aplicar será o .resizable(), que já conhecemos no vídeo anterior. Ele permite aumentar ou diminuir a imagem conforme o espaço disponível.
+
+Em seguida, aplicaremos o modificador .scaledToFit(), para que seja respeitada a escala da imagem. Dessa forma, a imagem não ficará distorcida.
+
+Por último, caso a imagem que você esteja trabalhando não venha com arredondamento, temos a opção de adicionar o modificador .cornerRadius(), definindo entre parênteses o valor desejado. Vamos definir 12, por exemplo.
+
+No nosso caso, a imagem já veio com o arredondamento, mas podem existir casos com imagens retangulares. Conseguimos tratar isso dessa forma.
+import SwiftUI
+
+struct CarouselItemView: View {
+    
+    let order: OrderType
+    
+    var body: some View {
+        Image(order.image)
+            .resizable()
+            .scaledToFit()
+            .cornerRadius(12)
+    }
+}
+
+struct CarouselItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        CarouselItemView(order: OrderType(id: 1, name: "", image: "barbecue-banner"))
+    }
+}
+COPIAR CÓDIGO
+Simulador Android contendo o mesmo banner descrito anteriormente, porém agora a imagem está ajustada às laterais do simulador.
+
+Para melhorar um pouco a área de pré-visualização, vamos aplicar alguns modificadores que já conhecemos ao elemento CarouselItemView().
+
+O primeiro deles será o .previewLayout(), contendo entre parênteses o .sizeThatFits. Em seguida, clicaremos no botão Selectable do simulador para que a imagem fique do tamanho real que estamos utilizando.
+
+Como segundo modificador, vamos aplicar o .padding(), para adicionar uma margem a todos os lados da imagem.
+
+import SwiftUI
+
+struct CarouselItemView: View {
+    
+    let order: OrderType
+    
+    var body: some View {
+        Image(order.image)
+            .resizable()
+            .scaledToFit()
+            .cornerRadius(12)
+    }
+}
+
+struct CarouselItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        CarouselItemView(order: OrderType(id: 1, name: "", image: "barbecue-banner"))
+            .previewLayout(.sizeThatFits)
+            .padding()
+    }
+}
+COPIAR CÓDIGO
+Com o código acima, chegamos ao seguinte resultado:
+
+Banner igual ao descrito anteriormente, agora sobre um retângulo branco, criando uma margem ao redor da imagem.
+
+Conclusão
+Já temos um item que vamos utilizar no carousel. O próximo passo é criar de fato o componente do carousel para acomodar a imagem que acabamos de construir. Veremos isso a seguir!
+
+@@03
+Trabalhando com TabView para implementar o carrossel
+
+Agora que já temos a imagem que irá compor o carousel de imagens do nosso aplicativo, é hora de utilizá-la em uma estrutura que nos dê o efeito de carrossel de fato, alterando de uma imagem para outra.
+Teremos um esquema de paginação, então conseguimos mover as imagens de um lado para o outro. Outro detalhe é o componente de pontos que mostram em qual índice do carrossel nós estamos.
+
+Faremos tudo isso agora, utilizando a view que acabamos de desenvolver.
+
+Trabalhando com TabView para implementar o carousel
+Primeiramente, vamos clicar com o botão direito sobre a pasta "CarouselView" no menu lateral esquerdo, e selecionar a opção "New File…" para criar um novo arquivo. Novamente, manteremos a opção "SwiftUI View" como User Interface, e vamos nomear o arquivo como CarouselTabView.swift. Feito isso, teremos a estrutura clássica de uma view em SwiftUI.
+
+import SwiftUI
+
+struct CarouselItemView: View {
+    var body: some View {
+        Text("Hello, World!")
+    }
+}
+
+struct CarouselItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        CarouselItemView()
+    }
+}
+COPIAR CÓDIGO
+Criando uma lista
+Para começar a entender como vamos utilizar e criar o carousel de imagens, primeiro precisamos criar uma lista que contenha essas imagens. Para isso, criaremos um array do tipo OrderType, classe que criamos nos vídeos anteriores.
+
+Abaixo da estrutura struct, usaremos a palavra-chave let para criar a lista ordersMock, que será do tipo OrderType, declarado entre colchetes. Em seguida, adicionamos um sinal de igual (=) e podemos inicializar nossa lista ([]).
+
+import SwiftUI
+
+struct CarouselItemView: View {
+    
+    let ordersMock: [OrderType] = [
+    ]
+    
+    var body: some View {
+        Text("Hello, World!")
+    }
+}
+
+struct CarouselItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        CarouselItemView()
+    }
+}
+COPIAR CÓDIGO
+Nessa lista, precisamos criar a quantidade de banners que gostaríamos de ter no aplicativo. No caso, temos 3 imagens compondo o carousel no simulador, então precisamos criar 3 objetos que representem essas imagens.
+
+Primeiro, instanciaremos o OrderType(), para o qual precisamos passar os parâmetros id, name, e image. Podemos definir qualquer valor para o id, como 1, por exemplo. Conforme dito anteriormente, não vamos utilizar um nome, mas para não utilizar uma string vazia, vamos definir um nome que represente a imagem que será utilizada, como banner burguer.
+
+Por fim, vamos definir o parâmetro image, elemento mais importante, pois precisa conter exatamente o nome da imagem contida na pasta "Assets". Começaremos copiando o nome da primeira imagem, barbecue-banner.
+
+import SwiftUI
+
+struct CarouselItemView: View {
+    
+    let ordersMock: [OrderType] = [
+        OrderType(id: 1, name: "banner burguer", image: "barbecue-banner")
+    ]
+    
+    var body: some View {
+        Text("Hello, World!")
+    }
+}
+
+struct CarouselItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        CarouselItemView()
+    }
+}
+COPIAR CÓDIGO
+Para economizar tempo, podemos copiar a linha que acabamos de escrever para instanciar um objeto do tipo OrderType, e colar duas vezes para representar os outros 2 banners.
+
+Na primeira linha copiada, vamos alterar o id para 2, o name para banner prato feito, e o image para brazilian-meal-banner, nome da segunda imagem da pasta "Assets".
+
+Por fim, faremos as mesmas alterações na segunda linha copiada: em id teremos 3, o name será banner poke, e o image será pokes-banner.
+
+import SwiftUI
+
+struct CarouselItemView: View {
+    
+    let ordersMock: [OrderType] = [
+        OrderType(id: 1, name: "banner burguer", image: "barbecue-banner"),
+        OrderType(id: 2, name: "banner prato feito", image: "brazilian-meal-banner"),
+        OrderType(id: 3, name: "banner poke", image: "pokes-banner"),
+    ]
+    
+    var body: some View {
+        Text("Hello, World!")
+    }
+}
+
+struct CarouselItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        CarouselItemView()
+    }
+}
+COPIAR CÓDIGO
+Criando o componente TabView
+Já temos a fonte de dados para alimentar o componente TabView que criaremos agora.
+
+Começaremos apagando a linha de texto na variável body, e no lugar dela, vamos declarar um objeto do tipo TabView.
+
+O TabView é um componente muito bacana, pois conseguimos fazer diversas coisas com ele, como, por exemplo, paginação, como no caso do nosso carousel de imagens contendo os banners. Porém, também poderíamos criar um menu com várias opções e aplicar uma rolagem.
+
+Há outro ponto importante: o TabView permite criar menus inferiores. Conseguimos encontrar menus desse tipo em várias aplicações, como o WhatsApp e aplicativos de refeições.
+Entre as chaves do componente TabView, precisamos colocar o conteúdo que ele terá. Acima, temos uma lista composta por 3 objetos, então a ideia é percorrer essa lista e, de acordo com o objeto, criar o CarouselItemView que acabamos de desenvolver.
+
+Primeiro, usaremos a view ForEach(), que irá nos devolver um mock, correspondente aos objetos da lista que iremos passar para a ForEach(). Para isso, digitamos ordersMock entre os parênteses da view.
+
+Dentro de ForEach(), ou seja, após a estrutura mock in, vamos utilizar a view que acabamos de criar, CarouselItemView. Para ela, conseguimos passar o mock, objeto que o ForEach() está percorrendo no momento.
+
+import SwiftUI
+
+struct CarouselItemView: View {
+    
+    let ordersMock: [OrderType] = [
+        OrderType(id: 1, name: "banner burguer", image: "barbecue-banner"),
+        OrderType(id: 2, name: "banner prato feito", image: "brazilian-meal-banner"),
+        OrderType(id: 3, name: "banner poke", image: "pokes-banner"),
+    ]
+    
+    var body: some View {
+        TabView {
+            ForEach(ordersMock) { mock in
+                CarouselItemView(order: mock)
+            }
+        }
+    }
+}
+
+struct CarouselItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        CarouselItemView()
+    }
+}
+COPIAR CÓDIGO
+Conclusão
+A seguir, vamos continuar aplicando os modificadores para finalizar nosso carousel! Além disso, vamos integrar o componente do carousel com a home, junto aos componentes que já criamos: o navigation bar (NavigationBar()) e o grid (OrderTypeGridView()).
+
+@@04
+Carrossel com TabView
+PRÓXIMA ATIVIDADE
+
+Uma das funcionalidades solicitadas pelo time do Chef Delivery é o carrossel (carousel) de imagens que permite o usuário conferir anúncios de comidas e restaurantes no app.
+Imagem que mostra uma das imagens do carrossel do projeto Chef Delivery. O fundo é na cor vermelha. No lado direito, há a frase “domingo é dia de churrasco” seguida de uma esfera amarela que contém o texto “tudo até trinta reais. Ao lado esquedo, há a imagem de uma carne na brasa
+
+A técnica para implementar essa feature foi o TabView.
+
+Por qual motivo utilizamos o TabView?
+
+O TabView é responsável por exibir as imagens de propaganda dos restaurantes no formato de um carrossel.
+ 
+Isso mesmo! O TabView é utilizado para exibir as imagens de propaganda dos restaurantes no formato de um carrossel, permitindo que o usuário navegue entre os banners.
+Alternativa correta
+O TabView permite a organização das imagens em abas sem nenhum modificador, facilitando a navegação entre os banners.
+ 
+Embora o TabView permita a organização em abas, no contexto específico do app, sua função principal é exibir o carrosselde imagens.
+Alternativa correta
+O TabView permite a organização das imagens em abas sem nenhum modificador, facilitando a navegação entre os banners.
+ 
+É verdade que o TabView pode ser utilizado para construir menus tab personalizados - e eles são bastante comuns em aplicativos. Porém, como vimos, o TabView também pode ser utilizado para construir um carrossel de imagens!
+
+@@05
+Finalizando carrossel com modificadores
+
+Para finalizar o nosso carousel de imagens, vamos aplicar alguns modificadores e integrar esse componente aos outros que já desenvolvemos: o navigation bar e o grid. Aos poucos, nosso aplicativo ganha forma!
+Finalizando o carousel com modificadores
+Para terminar, precisamos usar um modificador para aplicar o efeito de paginação no componente TabView. Além disso, vamos alterar a altura do componente.
+
+Primeiramente, vamos alterar a altura usando o modificador .frame() após o TabView no código. Dentro dele, teremos o parâmetro height, para o qual vamos definir o valor de 180.
+
+Em seguida, aplicaremos o modificador .tabViewStyle(). Nesse modificador, conseguimos definir um estilo para o nosso TabView. O que precisamos é o de paginação. Existem 2 opções: uma de paginação simples (page) e outra de paginação com o indexDisplayMode (page(indexDisplayMode:)). Selecionaremos a segunda.
+
+O indexDisplayMode nada mais é do que a configuração para exibir os pontos de marcação dos índices do carrossel, de acordo com o banner em que estamos navegando. Podemos aplicar ou não esse efeito. No nosso caso, iremos utilizar.
+Após o indexDisplayMode, precisamos passar a opção de exibir para sempre, independentemente do banner em que for feita a paginação, então digitamos .always.
+
+import SwiftUI
+
+struct CarouselItemView: View {
+
+    let ordersMock: [OrderType] = [
+        OrderType(id: 1, name: "banner burguer", image: "barbecue-banner"),
+        OrderType(id: 2, name: "banner prato feito", image: "brazilian-meal-banner"),
+        OrderType(id: 3, name: "banner poke", image: "pokes-banner"),
+    ]
+
+    var body: some View {
+        TabView {
+            ForEach(ordersMock) { mock in
+                CarouselItemView(order: mock)
+            }
+        }
+        .frame(height: 180)
+        .tabViewStyle(.page(indexDisplayMode: .always))
+    }
+}
+
+struct CarouselItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        CarouselItemView()
+    }
+}
+COPIAR CÓDIGO
+Com esses dois modificadores, já conseguimos integrar o componente do carousel aos outros para visualizar o resultado da nossa aplicação no momento.
+
+Vamos acessar a pasta "App" no menu lateral esquerdo para relembrar os componentes que estamos desenvolvendo ao longo do curso:
+
+Implementamos o ChefDeliveryApp;
+E a view ContentView.
+No arquivo ContentView.swift, temos o NavigationBar() e o OrderTypeGridView(), desenvolvidos anteriormente. Agora podemos adicionar o próximo componente: o CarouselTabView().
+
+import SwiftUI
+
+struct ContentView: View {
+    var body: some View {
+        VStack {
+            NavigationBar()
+                .padding(.horizontal, 15)
+                
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack {
+                    OrderTypeGridView()
+                    CarouselTabView()
+                }
+            }
+        }
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+}
+COPIAR CÓDIGO
+No simulador, teremos um resultado bastante próximo ao layout que estamos desenvolvendo.
+
+Simulador Android de fundo branco contendo um endereço na parte superior, seguido de um menu grid com 7 itens quadrados dispostos em 2 linhas. São eles: "Restaurantes", "Farmácia", "Descontos", "Gourmet", "Mercado", "Pet", "Bebidas". Por fim, um banner retangular vinho contendo a imagem de uma carne à esquerda, e o texto "Domingo é dia de CHURRASCO" à direita, com um círculo amarelo logo abaixo contendo a inscrição "Tudo até R$30". Sobre o banner, na parte inferior central, há três pontos brancos indicando a existência de um componente de carrossel.
+
+A única coisa que precisamos adicionar é um espaço entre o grid e o carousel de imagens. Na área de pré-visualização, existe um espaço, porém ele é menor. Quando trabalhamos com o stack view (VStack), conseguimos configurar o espaçamento entre os elementos.
+
+Para isso, usaremos o parâmetro spacing entre parênteses após o VStack dentro da ScrollView(). Vamos definir o valor de espaçamento como 20.
+
+import SwiftUI
+
+struct ContentView: View {
+    var body: some View {
+        VStack {
+            NavigationBar()
+                .padding(.horizontal, 15)
+                
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 20) {
+                    OrderTypeGridView()
+                    CarouselTabView()
+                }
+            }
+        }
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+}
+COPIAR CÓDIGO
+Dessa forma, já conseguimos corrigir o espaçamento!
+
+Conclusão
+Nesse momento, temos vários componentes integrados: o navigation bar (NavigationBar()), o grid (OrderTypeGridView()), e agora os banners (CarouselTabView()). Para finalizar, precisamos criar a lista com as lojas disponíveis no aplicativo. Veremos isso a seguir!
+
+@@06
+Para saber mais: mergulhando no tabViewStyle
+PRÓXIMA ATIVIDADE
+
+Como vimos na aula, utilizamos o indexDisplayMode no tabViewStyle para estilizar o tabView se apresentar as três “bolinhas” que informam ao usuário que ele pode arrastar as imagens em formato carrossel.
+Sabendo disso, existem algumas formas diferentes de se estilizar essa parte da nossa view. Abaixo, há um exemplo com duas tabViews diferentes em estilo que vamos aprofundar a como fazê-las:
+
+Tela de um simulador de iphone, na tela há um aplicativo de fundo  branco com dois quadrados, um azul na parte superior e um roxo na parte inferior onde cada um ocupa quase que totalmente a largura da tela e cada um possuí metade da altura da tela. No quadrado azul, há 3 círculos pequenos enumerados de 1 a 3, indicando 3 páginas diferentes.
+
+Este é o código da tela acima:
+
+import SwiftUI
+
+struct ContentView: View {
+
+    var body: some View {
+
+        VStack {
+                        // Primeiro quadrado
+            TabView {
+                Color.blue
+                    .edgesIgnoringSafeArea(.top)
+                    .tabItem {
+                        Image(systemName: "1.circle")
+                    }
+
+                Color.red
+                    .edgesIgnoringSafeArea(.top)
+                    .tabItem {
+                        Image(systemName: "2.circle")
+                    }
+
+                Color.yellow
+                    .edgesIgnoringSafeArea(.top)
+                    .tabItem {
+                        Image(systemName: "3.circle")
+                    }
+            }
+                        // Código a ser alterado
+            .tabViewStyle(.page(indexDisplayMode: ???))
+            
+                        // Segundo quadrado
+            TabView {
+                Color.purple
+                    .edgesIgnoringSafeArea(.top)
+                    .tabItem {
+                        Image(systemName: "circle")
+                    }
+
+                Color.orange
+                    .edgesIgnoringSafeArea(.top)
+                    .tabItem {
+                        Image(systemName: "circle")
+                    }
+
+                Color.green
+                    .edgesIgnoringSafeArea(.top)
+                    .tabItem {
+                        Image(systemName: "circle")
+                    }
+            }
+                        // Código a ser alterado
+            .tabViewStyle(.page(indexDisplayMode: ???))
+        }
+        .padding()
+
+    }
+
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+
+}
+COPIAR CÓDIGO
+Nas linhas onde há o .tabViewStyle(.page(indexDisplayMode: ???)) no lugar das interrogações (?), você pode colocar estas propriedades:
+
+.always : sempre mostra os index de paginação;
+.automatic : mostra os index somente se tiver mais que uma página no tabView;
+.never : nunca mostra os index.
+Para chegar ao resultado desejado você pode usar no primeiro quadrado, tanto a propriedade always quanto a automatic pois tem mais de uma página, já no segundo quadrado, você pode utilizar a propriedade never . Se utilizar as propriedades como sugerido, o resultado visual será semelhante ao gif abaixo:
+
+Tela de um simulador de iphone, na tela há um aplicativo de fundo  branco com dois quadrados, um azul na parte superior e um roxo na parte inferior onde cada um ocupa quase que totalmente a largura da tela e cada um possuí metade da altura da tela. No quadrado azul, há 3 círculos pequenos enumerados de 1 a 3, indicando 3 páginas diferentes. No quadrado de cima há 3 páginas, uma de cor azul, outra vermelha e outra amarela. No quadrado de baixo há 3 páginas, uma de cor roxa, outra laranja e uma ultima verde.
+
+Dessa forma, incentivo você a alterar, adicionar, excluir ou fazer suas alterações no código acima colocando imagens, textos entre outros componentes para entender como a paginação e o estilo dela funcionam.
+
+Gostaria de lembrar que esses exemplos acima não têm relação com o Chef Delivery e são apenas uma amostra para incentivar os seus estudos.
+
+@@07
+Faça como eu fiz: implementando o TabView para criar um carrossel de imagens
+PRÓXIMA ATIVIDADE
+
+Hora de colocar a mão na massa!
+É sua vez de criar o layout de cada item individual do Carousel de anúncios (carrossel, em português), percorrer uma lista de promoções com imagens e fazer a paginação delas!
+
+Para fazer isso, vou dar algumas dicas:
+
+Crie a pasta CarouselView contendo a classe SwiftUI CarouselItemView;
+Utilize modificadores na Imagem para tratar corretamente o tamanho;
+Criar uma lista do tipo orderType para "mockar" os dados do Carousel;
+Utilize o TabView junto do ForEach na lista para fazer a paginação das imagens;
+Implemente aos modificadores .frame e .tabViewStyle para chegar ao estilo desejado;
+Aplique o CarouselTabView() abaixo do OrderTypeGridView() na nossa página principal;
+Insira o espaçamento com o parâmetro spacing na VStack para deixar o visual estilizado corretamente.
+O resultado esperado é que, após essa implementação, ao iniciar o app, ele renderize os componentes visuais corretamente, com o CarouselTabView aparecendo abaixo do nosso grid. Também será possível arrastar as imagens para o lado para percorrer as promoções. Na próxima aula vamos fazer a lista de lojas abaixo do CarouselTabView.
+Vamos lá?
+
+O objetivo desta atividade é estimular a prática necessária para seu aprendizado!
+Você pode conferir o código do projeto até o momento através desta branch no GitHub.
+
+Se precisar de ajuda, chama a gente no fórum ou discord!
+
+https://github.com/alura-cursos/chef-delivery-parte1/tree/aula-5
+
+@@08
+O que aprendemos?
+PRÓXIMA ATIVIDADE
+
+Nessa aula, você aprendeu como:
+Criar uma nova pasta "CarouselView" e uma View chamada "CarouselItemView";
+Utilizar o TabView como container para o carrossel;
+Implementar a estrutura do carrossel com o TabView e o modificador .tabViewStyle(.page);
+Criar uma lista de mocks para representar os banners;
+Utilizar o TabView com o modificador .tabViewStyle(.page(indexDisplayMode: .always)) para mostrar as bolinhas que indicam a quantidade de banners;
+Adicionar o componente de carrossel na ContentView.
+Pronto! Terminamos o carrossel.
+
+Vejo você na próxima aula!
