@@ -2147,3 +2147,745 @@ Adicionar o componente de carrossel na ContentView.
 Pronto! Terminamos o carrossel.
 
 Vejo você na próxima aula!
+
+#### 20/08/2023
+
+@06-Lista de lojas
+
+@@01
+Projeto da aula anterior
+PRÓXIMA ATIVIDADE
+
+Você pode revisar o seu código e acompanhar o passo a passo do desenvolvimento do nosso projeto e, se preferir, pode baixar o projeto da aula anterior.
+Bons estudos!
+
+https://github.com/alura-cursos/chef-delivery-parte1/archive/refs/heads/aula-5.zip
+
+@@02
+Criando a View de restaurantes
+
+A fim de concluir as implementações restantes do projeto, vamos desenvolver o último componente, que consiste na criação de uma listagem de lojas.
+mockup do aplicativo Chef Delivery. na parte superior da tela, o endereço "R. Vergueiro, 3185" e um ícone de sino de Notificações. abaixo, uma grade com ícones de categorias de navegação e seus nomes: Restaurantes, Farmácia, Descontos, Gourmet, Mercado, Pet, Bebidas. abaixo, um banner de propaganda de Pokes com 40% de desconto. por fim, uma lista de título "Lojas" contendo os restaurantes "Monstro burger", "Food court" e "Carbron", nessa ordem.
+
+Na seção "Lista", é possível notar a presença do título, seguido por uma imagem à esquerda e o nome da loja à direita.
+
+Imagem e nome
+Identificando a Stack View
+É importante identificar a estrutura que podemos utilizar para construir cada linha da listagem. Durante o curso, adotamos a abordagem de iniciar o desenvolvimento pelos componentes menores, ou seja, pela menor parte, e posteriormente integrá-los ao componente principal.
+
+Adotamos a mesma abordagem ao lidar com o Grid, em vez de criar todo o grid de uma vez, começamos criando um Grid item separado e, em seguida, integramos esse item ao componente principal. Da mesma forma, aplicamos esse método ao trabalhar com o Carousel. Primeiro, criamos a visualização para representar a imagem e, posteriormente, integramos essa visualização ao TabView para gerar o Carousel.
+
+Agora, vamos construir a listagem. Seguindo a mesma lógica, começaremos pelo menor componente, que será cada linha dentro dessa lista. Em seguida, faremos a integração com a lista principal.
+
+Para acomodar a funcionalidade das lojas, que é uma funcionalidade diferente, criaremos uma nova pasta. Para fazer isso, no menu lateral esquerdo, clicamos com o botão direito na pasta ChefDelivery e selecionamos a opção "New Group" (em português, "Novo grupo"). Vamos dar o nome de "StoresView" para essa pasta. Em seguida, clicamos nessa pasta e a arrastamos para depois da pasta CarouselView.
+
+Dentro da pasta StoresView, criamos uma nova view. Clicamos com o botão direito na pasta, escolhemos a opção "New File" e, em seguida, "SwiftUI View". Depois, no campo "Save As" ("Salvar como"), digitamos o nome do arquivo, que será "StoreItemView", e selecionamos o botão "create" no canto inferior direito.
+
+Seremos redirecionados para a pasta que acabamos de criar:
+
+StoreItemView.swift
+//
+// StoreItemView.swift ChefDelivery
+// Created by ALURA on 18/05/23.
+//
+
+import SwiftUI
+
+struct StoreItemView: View {
+    var body: some View {
+        Text("Hello, World!")
+    }
+}
+
+struct StoreItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        StoreItemView()
+    }
+}COPIAR CÓDIGO
+Do lado direito do Xcode, temos:
+
+área de pré-visualização do Xcode. simulador do iPhone exibindo o texto "Hello, World!" sobre fundo branco
+
+Vamos deletar a linha que contém o "Hello, World" e começar a analisar como criaremos a linha dentro da listagem.
+
+Acessando a seção "Lojas" do aplicativo, encontramos uma lista de várias lojas. Cada loja é representada por uma imagem à direita e o nome da loja à esquerda. Na lista, as lojas são dispostas da seguinte forma: a primeira loja é "Monstro burger", a segunda é "Food court", a terceira é "Carbron" e a quarta é "Padaria".
+
+Começamos identificando os componentes existentes nessa linha, e analisando a imagem acima verificamos que temos uma imagem (image) e um texto (text), sendo o nome da loja. Essa estrutura se repete para todas as linhas.
+
+Após identificarmos esses componentes, analisamos a orientação na qual iremos alinhar esses elementos. Se os componentes estão dispostos verticalmente, temos a "Pilha Vertical de Elementos" (Vertical Stack View). Se os componentes estão dispostos horizontalmente, temos a "Pilha Horizontal de Elementos" (Horizontal Stack View).
+
+Ao analisarmos o menor componente e progredirmos para os componentes mais complexos, conseguimos identificar melhor o alinhamento necessário. No caso em questão, os componentes estão dispostos horizontalmente, lado a lado. Portanto, usaremos o Horizontal Stack View.
+
+No arquivo StoreItemView, na linha em que removemos o Text(), digitamos "HStack{}", e passamos os componentes que identificamos anteriormente, que são a Image("") e o Text(). Para a imagem, inicialmente passamos o nome de uma imagem chamada "monstro-burger-logo" (isso apenas para exibir algo na tela e visualizarmos melhor; posteriormente faremos a fatoração necessária). No Text("") colocamos o nome da loja, "Monstro Burger".
+
+StoreItemView.swift
+//
+// StoreItemView.swift ChefDelivery
+// Created by ALURA on 18/05/23.
+//
+
+import SwiftUI
+
+struct StoreItemView: View {
+    var body: some View {
+                HStack{
+                        Image("monstro-burger-log")
+                        Text("Monstro Burger")
+                }
+    }
+}
+
+struct StoreItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        StoreItemView()
+    }
+}COPIAR CÓDIGO
+No simulador do lado direito, temos:
+
+área de pré-visualização do Xcode. simulador do iPhone exibindo uma imagem ilegível e ao lado o texto "Monstro Burger" sobre fundo branco
+
+Com isso, fica evidente a importância de determinar qual tipo de Stack View será utilizado, pois ele se torna um ponto de partida crucial para a criação da view necessária.
+
+Ao analisar no simulador, percebemos que temos um título com o nome da loja, mas também podemos ter outra label (texto) abaixo, como a distância da pessoa usuária até o restaurante ou o tempo de entrega. É importante ressaltar que podemos utilizar uma Vertical Stack View dentro de outra Vertical Stack View. Dessa forma, se desejarmos adicionar um texto abaixo do nome do restaurante, utilizamos a Vertical Stack View, já que ela nos permite colocar um elemento abaixo do outro.
+
+Para isso, no código, escrevemos VStack{} dentro do HStack{} e passamos o Text("Monstro Burger"). Se desejarmos adicionar outro texto, basta adicionar mais um bloco Text{} dentro do VStack{}.
+
+StoreItemView.swift
+//
+// StoreItemView.swift ChefDelivery
+// Created by ALURA on 18/05/23.
+//
+
+import SwiftUI
+
+struct StoreItemView: View {
+    var body: some View {
+                HStack{
+                        Image("monstro-burger-log")
+
+                        VStack{
+                                Text("Monstro Burger")
+                                Text("Monstro Burger")
+                        }
+                }
+    }
+}
+
+struct StoreItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        StoreItemView()
+    }
+}COPIAR CÓDIGO
+No simulador, obtemos:
+
+área de pré-visualização do Xcode. simulador do iPhone exibindo uma imagem ilegível e ao lado há dois textos escritos "Monstro Burger", um abaixo do outro e sobre fundo branco
+
+Logo, podemos combinar o uso da Stack View. Como temos apenas um título, podemos remover o outro Text(). Já que não estamos usando informações fixas, podemos criar uma constante chamada order, que representa um pedido de restaurante e será o objeto com o qual iremos trabalhar.
+
+Ao utilizar essa forma na struct, precisamos inicializá-la no preview passando um objeto desse tipo. Colocamos o id número 1, o nome do restaurante em questão e depois a imagem.
+
+StoreItemView.swift
+//
+// StoreItemView.swift ChefDelivery
+// Created by ALURA on 18/05/23.
+//
+
+import SwiftUI
+
+struct StoreItemView: View {
+
+    let order: OrderType
+
+    var body: some View {
+                HStack{
+                        Image("monstro-burger-log")
+
+                        VStack{
+                                Text("Monstro Burger")
+                        }
+                }
+    }
+}
+
+struct StoreItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        StoreItemView(order: OrderType(id:1, name:"Monstro Burger", image:"monstro-burger-log"))
+    }
+}COPIAR CÓDIGO
+Refatorando o código
+Podemos começar a refatorar o código removendo as informações fixas. Em Image() ao invés do nome da imagem passamos a constante order que criamos seguida de .image, order.image; e no Text() passamos o order.name.
+
+StoreItemView.swift
+//
+// StoreItemView.swift ChefDelivery
+// Created by ALURA on 18/05/23.
+//
+
+import SwiftUI
+
+struct StoreItemView: View {
+
+    let order: OrderType
+
+    var body: some View {
+                HStack{
+                        Image(order.image)
+
+                        VStack{
+                                Text(order.name)
+                        }
+                }
+    }
+}
+
+struct StoreItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        StoreItemView(order: OrderType(id:1, name:"Monstro Burger", image:"monstro-burger-log"))
+    }
+}COPIAR CÓDIGO
+Incluindo modificadores
+Para finalizar, podemos utilizar alguns modificadores na imagem que já conhecemos. Nesse caso, sabemos o tamanho da imagem, no entanto, é importante lembrar que, se consultarmos uma API ou obtivermos a imagem do armazenamento na AWS, podemos encontrar imagens de tamanhos desconhecidos. Portanto, é crucial preparar a imagem de forma a exibi-la de uma maneira que não quebre o layout.
+
+Para lidar com diferentes tamanhos de imagens e garantir que elas se ajustem corretamente ao layout, utilizamos os modificadores resizable() e depois passamos o scaledToFit(), este é para não deixar a imagem com uma resolução esticada em caso da imagem vir muito grande. Em seguida, aplicamos o arredondamento à imagem usando .cornerRadius(25).
+
+O valor de 25 é utilizado como exemplo, assumindo que a altura e largura da imagem são 50. Para obter um arredondamento adequado, utilizamos a metade da altura ou largura da imagem. Para indicar isso, definimos o tamanho da imagem com .frame(width: 50, height: 50).
+
+Vamos adicionar o modificador de fonte chamado subheadline utilizando .font() para obter um tamanho mais agradável ao texto. Também podemos alterar a seção de pré-visualização usando o previewLayout() passando o sizeThatFits.
+
+StoreItemView.swift
+//
+// StoreItemView.swift ChefDelivery
+// Created by ALURA on 18/05/23.
+//
+
+import SwiftUI
+
+struct StoreItemView: View {
+
+    let order: OrderType
+
+    var body: some View {
+                HStack{
+                        Image(order.image)
+                                .resizable()
+                                .scaledToFit()
+                                .cornerRadius(25)
+                                .frame(width: 50, height: 50)
+
+                        VStack{
+                                Text(order.name)
+                                        .font(.subheadline)
+                        }
+                }
+    }
+}
+
+struct StoreItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        StoreItemView(order: OrderType(id:1, name:"Monstro Burger", image:"monstro-burger-log"))
+                .previewLayout(.sizeThatFits)
+    }
+}COPIAR CÓDIGO
+Do lado direito, abaixo do simulado podemos clicar na opção "Selectable" para deixá-lo ocupando o espaço disponível:
+
+área de pré-visualização do Xcode exibindo apenas a imagem e o título do restaurante
+
+Conclusão
+Com isso, temos a linha (row) que utilizaremos para a listagem. A seguir, veremos como criar essa lista com várias lojas.
+
+@@03
+Criando o mock da lista da restaurantes
+
+Agora que finalizamos a criação da linha que representa cada item dentro da lista, iremos criar o componente para gerar a lista com várias lojas. Para isso, criamos uma nova classe dentro da pasta StoresView chamada de StoresContainerView, seguindo o mesmo passo a passo que fizemos anteriormente para criar uma classe.
+Somos redirecionados para o arquivo com o código padrão do SwiftUI:
+
+StoresContainerView.swift
+//
+// StoresContainerView.swift
+// ChefDelivery
+//
+// Created by ALURA on 18/05/23.
+//
+
+import SwiftUI
+
+struct StoresContainerView: View {
+    var body: some View {
+            Text("Hello, World!")
+    }
+}
+struct StoresContainerView_Previews: PreviewProvider {
+        static var previews: some View {
+                StoresContainerView()
+        }
+}COPIAR CÓDIGO
+Para começar, vamos remover a linha com o "Hello, World!". A ideia é empilhar os elementos dentro da lista que precisamos criar para o mock. No simulador, temos uma lista de restaurantes com os seguintes elementos: "Monstro Burger", "Food court", "Carbron", "Padaria" e "Açaí Panda". Esses são os elementos que precisamos representar dentro da nossa view.
+
+Geralmente, essas informações são obtidas por meio de uma requisição a uma API, que retorna os dados em formato JSON. Com base nesses dados, conseguimos montar a lista na tela.
+
+Como nosso foco não é a integração com requisições HTTP, estamos trabalhando com mocks, que são listas falsas criadas para simular o comportamento do aplicativo. Faremos isso agora para criar uma lista simulada.
+
+Primeiro, vamos para o arquivo DataSourceMock na pasta Model para gerar uma nova lista. Podemos copiar a lista existente (usada para montarmos o Grid) no arquivo e colá-la abaixo, fazendo as modificações necessárias.
+
+Assim, ficamos com:
+
+DataSourceMock
+//
+// DataSourceMock.swift
+// ChefDelivery
+//
+// Created by ALURA on 17/05/23.
+//
+
+import Foundation
+
+let ordersMock: [OrderType] = [
+        OrderType(id: 1, name: "Restaurantes", image: "hamburguer"),
+        OrderType(id: 2, name: "Mercado", image: "mercado"),
+        OrderType(id: 3, name: "Farmácia", image: "farmacia"), 
+        OrderType(id: 4, name: "Pet", image: "petshop"),
+        OrderType(id: 5, name: "Descontos", image: "descontos"),
+        OrderType(id: 6, name: "Bebidas", image: "bebidas"),
+        OrderType(id: 7, name: "Gourmet", image: "gourmet"),
+]
+
+let ordersMock: [OrderType] = [
+        OrderType(id: 1, name: "Restaurantes", image: "hamburguer"),
+        OrderType(id: 2, name: "Mercado", image: "mercado"),
+        OrderType(id: 3, name: "Farmácia", image: "farmacia"), 
+        OrderType(id: 4, name: "Pet", image: "petshop"),
+        OrderType(id: 5, name: "Descontos", image: "descontos"),
+        OrderType(id: 6, name: "Bebidas", image: "bebidas"),
+        OrderType(id: 7, name: "Gourmet", image: "gourmet"),
+]COPIAR CÓDIGO
+Vamos remover as duas últimas linhas, já que precisamos apenas de cinco elementos. Em seguida, renomearemos a lista para storesMock e, em seguida, alteraremos o nome de cada objeto para os nomes dos restaurantes. Para os nomes dos ícones, copiaremos os nomes dos arquivos do diretório Stores dentro da pasta Assets.
+
+Pasta Stores
+acai-panda-logo
+bakery-logo
+carbron-logo
+food-court-logo
+monstro-burger-logo
+Assim, ficamos com o seguinte trecho de código:
+
+DataSourceMock
+// código omitido
+
+let storesMock: [OrderType] = [
+        OrderType(id: 1, name: "Monstro Burger", image: "monstro-burger-logo"),
+        OrderType(id: 2, name: "Food court", image: "food-court-logo"),
+        OrderType(id: 3, name: "Carbron", image: "carbron-logo"), 
+        OrderType(id: 4, name: "Padaria", image: "bakery-logo"),
+        OrderType(id: 5, name: "Açai Panda", image: "acai-panda-logo"),
+]COPIAR CÓDIGO
+Temos uma lista que usaremos para criar a listagem.
+
+Voltando ao arquivo StoresContainerView, temos duas formas de trabalhar com listagem na vertical. A primeira é usando o VStack View, onde vamos encaixando os elementos (o cuidado que precisamos ter é que por padrão o Stack View não possui um scroll); e o segundo é usando o List (parecido com o UITableView).
+
+Para realizar essa modificação, escrevemos List{} e passamos um Text("Açai"). Observem que, à medida que adicionamos mais Texts dentro da lista, os elementos serão exibidos um abaixo do outro no simulador.
+
+O List{} já vem com o recurso de rolagem (scroll), o que torna esse componente bastante útil para exibir uma lista com um número maior de elementos.
+StoresContainerView.swift
+//
+// StoresContainerView.swift
+// ChefDelivery
+//
+// Created by ALURA on 18/05/23.
+//
+
+import SwiftUI
+
+struct StoresContainerView: View {
+    var body: some View {
+            List {
+                    Text("Açai")
+                    Text("Açai")
+                    Text("Açai")
+                    Text("Açai")
+            }
+    }
+}
+struct StoresContainerView_Previews: PreviewProvider {
+        static var previews: some View {
+                StoresContainerView()
+        }
+}COPIAR CÓDIGO
+No simulador, temos:
+
+área de pré-visualização do Xcode. simulador do iPhone exibindo o lista na parte superior da tela com o texto  "Açaí" quatro vezes, sobre fundo branco.
+
+O problema de usarmos esse componente agora é que a tela principal do aplicativo (home) já temos um ScrollView. Podemos visualizar isso no arquivo ContentView. Logo, já temos um componente de scroll que serve para encaixar as features que estamos desenvolvendo.
+
+Se utilizarmos o scroll na listagem de lojas, teremos um scroll principal na tela inicial e, dentro do componente de listagem, teremos outro scroll. Nesse cenário, pode não ser interessante utilizar o List{}. Como temos apenas cinco restaurantes, não há problema em usar um *Stack View *para exibir a lista de lojas.
+
+Podemos remover o List{} e substituí-lo por VStack{}. Para inserir o título "Lojas", criaremos uma constante dentro da struct chamada title, que terá o valor "Lojas", let title = "Lojas". Utilizaremos essa variável dentro do Text() dentro da VStack. Em seguida, adicionaremos o modificador de fonte headline ao texto para aplicar um estilo seminegrito.
+
+StoresContainerView.swift
+//
+// StoresContainerView.swift
+// ChefDelivery
+//
+// Created by ALURA on 18/05/23.
+//
+
+import SwiftUI
+
+struct StoresContainerView: View {
+
+    let title = "Lojas"
+
+    var body: some View {
+            VStack {
+                    Text(title)
+                            .font(.headline)
+            }
+    }
+}
+struct StoresContainerView_Previews: PreviewProvider {
+        static var previews: some View {
+                StoresContainerView()
+        }
+}COPIAR CÓDIGO
+No simulador, obtemos:
+
+área de pré-visualização do Xcode. simulador do iPhone exibindo o título "Lojas" centralizado na tela em uma fonte seminegrito, sobre um fundo branco.
+
+Agora que já temos os mocks da lista e começamos a montar a estrutura para a listagem, podemos prosseguir e finalizar esse componente de listagem.
+
+@@04
+Finalizando a lista de restaurantes
+
+A fim de concluir a funcionalidade de listagem, é necessário empilhar as views que desenhamos verticalmente. Cada view possui um espaçamento específico entre as linhas, ou seja, o restaurante "Monstro burger" e "Food court" têm um espaçamento específico entre eles.
+Portanto, criamos uma nova Vertical Stack View para organizar essas views de lojas que criamos. Ao atribuir a cada uma um espaçamento individual, é mais fácil controlar o layout através da criação de um VStack View.
+
+Após o título, iniciamos o novo VStack. Podemos utilizar o construtor que o Xcode exibe em uma janela flutuante. Para isso, pressionamos "Alt + Enter" e o Xcode preenche automaticamente a estrutura para nós.
+
+StoresContainerView.swift
+//
+// StoresContainerView.swift
+// ChefDelivery
+//
+// Created by ALURA on 18/05/23.
+//
+
+import SwiftUI
+
+struct StoresContainerView: View {
+
+    let title = "Lojas"
+
+    var body: some View {
+                    VStack {
+                            Text(title)
+                                    .font(.headline)
+
+                            VStack(alignment: HorizontalAlignment, spacing: 
+                                    CGFloat?, content: () -> _)
+                    }
+    }
+}
+struct StoresContainerView_Previews: PreviewProvider {
+            static var previews: some View {
+                            StoresContainerView()
+            }
+}COPIAR CÓDIGO
+Dentro dessa estrutura, temos várias opções, como o alinhamento. No nosso caso, queremos alinhar todos os itens à esquerda. Para isso, utilizamos o valor leading na propriedade alignment.
+
+Se desejamos alinhar os elementos à esquerda, utilizamos o valor leading. Para alinhá-los ao centro, utilizamos o valor center, e para alinhá-los à direita, utilizamos o valor trailing.
+No atributo de espaçamento (spacing), digitamos o número 30. Em seguida, temos o conteúdo do StackView. Como anteriormente criamos uma lista de mocks para as lojas da listagem, vamos percorrê-la usando o ForEach(). Desejamos que ele retorne um mock a cada iteração da lista, para isso usamos a sintaxe mock in.
+
+Dentro dos parênteses do ForEach(), passamos o nome do array que criamos no arquivo DataSourceMock, que é storesMock.
+
+Dentro do ForEach(), chamamos a view que criamos anteriormente, a StoreItemView. Para inicializar essa view, precisamos passar um objeto do tipo OrderType como parâmetro, que será o mock.
+
+StoresContainerView.swift
+//
+// StoresContainerView.swift
+// ChefDelivery
+//
+// Created by ALURA on 18/05/23.
+//
+
+import SwiftUI
+
+struct StoresContainerView: View {
+
+    let title = "Lojas"
+
+    var body: some View {
+                    VStack {
+                            Text(title)
+                                    .font(.headline)
+
+                            VStack(alignment: .leading, spacing: 30) {
+                                    ForEach(storesMock) { mock in 
+                                            StoreItemView(order: mock)
+                                    }
+                            }
+                    }
+    }
+}
+struct StoresContainerView_Previews: PreviewProvider {
+            static var previews: some View {
+                            StoresContainerView()
+            }
+}COPIAR CÓDIGO
+No simulador, obtemos uma lista semelhante àquela que precisamos implementar na página inicial do aplicativo.
+
+área de pré-visualização do Xcode. simulador do iPhone exibindo a lista de restaurantes, sendo Monstro Burger, Food Court, Carbron, Padaria e Açaí Panda, sobre fundo branco. O título e os elementos estão centralizados na tela.
+
+Ajustando a lista
+Para alinhar os elementos da lista à esquerda, podemos realizar duas implementações.
+
+Primeiramente, no arquivo StoreItemView, dentro de cada linha de restaurante, adicionaremos um componente chamado space. Abaixo do VStack digitamos Spacer(), ele irá usar o espaço disponível que ele possui dentro do Stack View.
+
+Ao trabalhar com uma Stack View, os elementos são colocados dentro do contêiner, aproveitando o espaço disponível para exibir o componente e por padrão irá centralizar.
+Na verdade, o HStack ocupa apenas o espaço necessário em torno da imagem e do texto. Pode dar a impressão de que ele ocupa toda a linha até o final, mas na verdade ocupa apenas o espaço necessário dentro do Stack View.
+
+Ao utilizar o spacer(), inserimos um espaçamento após o texto que se estende desde o início até o final da linha, permitindo centralizar todo o conteúdo à esquerda. Dessa forma, o spacer ajuda a alcançar o alinhamento desejado.
+
+StoreItemView
+// Código omitido
+
+    VStack {
+                    Text(order.name)
+                            .font(.subheadline)
+    }
+
+    Spacer()
+}
+
+// Código omitidoCOPIAR CÓDIGO
+Ao inserir o spacer, observe que no simulador a imagem e o texto com o nome do restaurante já estarão centralizados à esquerda.
+
+Suponhamos que tenhamos uma linha completa como a visualização principal, onde o Stack View ocupa um espaço central nessa linha. Ao inserirmos um modificador, o conteúdo é "empurrado" para ocupar todo o espaço disponível. Por isso, no nosso caso, ele ficou centralizado à esquerda.
+
+Voltando ao arquivo StoresContainerView, onde já temos os elementos alinhados à esquerda, agora precisamos aplicar a mesma lógica ao título "Lojas" (que está centralizado na tela). Para isso, utilizamos o mesmo inicializador de Stack View e aplicamos o alinhamento leading ao título. No entanto, precisamos somente do espaçamento e conteúdo neste caso.
+
+StoresContainerView.swift
+// Código omitido
+
+var body: some View {
+    VStack(alignment: .leading) {
+            Text(title)
+                    .font(.headline)
+
+            VStack(alignment: .leading, spacing: 30) {
+                    ForEach(storesMock) { mock in 
+                            StoreItemView(order: mock)
+                    }
+            }
+    }
+}
+
+// Código omitidoCOPIAR CÓDIGO
+Agora, com o alinhamento leading aplicado ao título e aos elementos, temos o título centralizado à esquerda, assim como os elementos.
+
+Em seguida, podemos aplicar um padding, que é um espaçamento entre as bordas dos elementos. Ao fechar o VStack na linha 24, podemos adicionar o modificador padding() e passar o valor 20 para obter um espaçamento entre o conteúdo e a margem esquerda, evitando que fiquem muito próximos.
+
+Ao inserirmos o modificador padding() sem especificar um eixo, ele é aplicado em todo o entorno do elemento: acima, abaixo, à esquerda e à direita. Isso garante um espaçamento uniforme em todas as direções.
+
+No preview, podemos alterar o layout de visualização para ver como a lista ficou. Para isso, utilizamos o modificador previewLayout() e passamos .sizeThatFits como parâmetro. Isso permite que a visualização ocupe apenas o espaço necessário.
+
+Do lado direito, abaixo do simulado podemos clicar na segunda opção "Selectable" para deixá-lo ocupando o espaço disponível.
+
+StoresContainerView.swift
+// Código omitido
+
+var body: some View {
+    VStack(alignment: .leading) {
+            Text(title)
+                    .font(.headline)
+
+            VStack(alignment: .leading, spacing: 30) {
+                    ForEach(storesMock) { mock in 
+                            StoreItemView(order: mock)
+                    }
+            }
+    }
+    .padding(20)
+}
+}
+struct StoresContainerView_Previews: PreviewProvider {
+            static var previews: some View {
+                            StoresContainerView()
+                                    .previewLayout(.sizeThatFits)
+            }
+}COPIAR CÓDIGO
+No simulador, obtemos:
+
+área de pré-visualização do Xcode. Simulador do iPhone exibindo apenas a lista de restaurantes, sendo Monstro Burger, Food Court, Carbron, Padaria e Açaí Panda
+
+Com as alterações feitas e o componente desenvolvido, temos um componente que atende às nossas necessidades e igual ao que nos propomos a desenvolver. Agora, podemos integrar esse componente à nossa página inicial (home). Isso para visualizarmos todos os componentes desenvolvidos juntos.
+
+No arquivo ContentView, temos o OrderTypesGridView() e o CarouselTabView(). Abaixo, adicionamos o StoresContainerView().
+
+ContentView
+// Código omitido
+
+ScrollView(.vertical, showsIndicators: false) {
+        VStack(spacing: 20) {
+                OrderTypesGridView()
+                CarouselTabView()
+                StoresContainerView()
+        }
+
+// Código omitidoCOPIAR CÓDIGO
+mockup do aplicativo Chef Delivery. Na parte superior da tela, o endereço "R. Vergueiro, 3185" e um ícone de sino de Notificações. Abaixo, uma grade com ícones de categorias de navegação e seus nomes: Restaurantes, Farmácia, Descontos, Gourmet, Mercado, Pet, Bebidas. Abaixo, um banner de propaganda de churrasco com 30% de desconto. por fim, uma lista de título "Lojas" contendo os restaurantes "Monstro burger", "Food court" e "Carbron", nessa ordem.
+
+Com isso, temos todos os componentes juntos.
+
+Agora, vamos gerar um build no IPhone Pro 14 clicando no botão "▶" do lado superior esquerdo do Xcode. Isso para verificarmos em um simulador de verdade.
+
+Como retorno, temos uma da tela do iPhone contendo os mesmos componentes mencionados anteriormente. A diferença é que há um relógio no canto superior esquerdo, seguido pelo nome do aplicativo "ChefDelivery". No canto superior direito, há os ícones de menu, conectividade Wi-Fi e indicador de nível de bateria do celular.
+Ao usar o simulador, conseguimos ter uma visão geral do aplicativo na tela. Observem que ele está igual ao projeto inicial solicitado. Um detalhe interessante é que, geralmente, em listas ou componentes, temos a opção de clicar em um elemento e realizar alguma ação no simulador.
+
+Para adicionar ação aos itens, podemos ir ao arquivo StoreItemView. Após o Spacer() onde fechamos o HStack, podemos adicionar o método .onTapGesture{}. Dentro desse método, podemos adicionar uma ação, como por exemplo, um print() com a mensagem "clicou em \(order.name)" usando interpolação de string.
+
+StoreItemView
+// Código omitido
+
+    VStack {
+                    Text(order.name)
+                            .font(.subheadline)
+    }
+
+            Spacer()
+}.onTapGesture{
+    print("clicou em \(order.name)")
+}
+
+// Código omitidoCOPIAR CÓDIGO
+Isso para visualizarmos no console o item que estamos selecionando.
+
+Ao selecionarmos novamente o botão "▶" e acessarmos o simulador, escolhemos a opção "Monstro burger". Nesse momento, uma mensagem é exibida no console com o seguinte conteúdo:
+
+clicou em Monstro burger
+Podemos clicar em todos os restaurantes que serão informado no console onde clicamos.
+
+clicou em Monstro burger clicou em Food court clicou em Carbron …
+Isso é interessante, pois podemos aplicar o onTapGesture a todos os elementos e, se precisarmos executar alguma ação ao selecionar um dos elementos, utilizamos esse gesto de toque.
+
+Dessa forma, concluímos as principais funcionalidades do aplicativo.
+
+@@05
+Faça como eu fiz: construindo a lista de restaurantes
+PRÓXIMA ATIVIDADE
+
+Hora de colocar a mão na massa!
+É sua vez de criar o layout das listas de restaurantes! Para isso vou dar algumas dicas:
+
+Crie a pasta StoresView contendo a classe SwiftUI StoreItemView;
+Utilize uma HStack e/ou VStack para posicionar a imagem e o texto um ao lado do outro;
+Utilize modificadores para redimensionar a imagem da loja;
+Crie uma lista do tipo orderType para “mockar” os dados das lojas;
+Implemente o layout da sessão “Lojas” com um texto acima da lista de lojas;
+Implemente seu container com o layout final na sua tela principal.
+O resultado esperado é que, após essa implementação, ao iniciar o app ele renderize os componentes visuais corretamente, com o a lista de restaurantes sendo exibida abaixo do carrossel de imagens.
+
+O objetivo desta atividade é estimular a prática necessária para seu aprendizado!
+Você pode conferir o código do projeto até o momento através deste commit no GitHub.
+
+Se precisar de ajuda, chama a gente no fórum ou discord!
+
+https://github.com/alura-cursos/chef-delivery-parte1/commit/5268ffb4c35d739efc42702d43459b374fa680a3
+
+@@06
+Revisando pilhas verticais e horizontais
+PRÓXIMA ATIVIDADE
+
+Finalizamos a implementação da tela inicial de home do Chef Delivery!
+Vamos recapitular pontos importantes que vimos ao longo do curso?
+
+Você compreendeu a organização de elementos no SwiftUI, que é feita utilizando os containers VStack e HStack. Esses containers são usados para empilhar Views de maneiras específicas.
+
+Levando em consideração o que foi visto, qual é a principal diferença entre estes dois?
+
+
+Alternativa correta
+Ambos VStack e HStack organizam as visualizações uma em cima da outra.
+ 
+Alternativa correta
+VStack organiza as views em uma disposição vertical, enquanto HStackorganiza as views em uma disposição horizontal.
+ 
+Isso mesmo! VStack, como o nome sugere, organiza as Views em uma disposição vertical, empilhando-as uma em cima da outra. Por outro lado, HStack organiza as Views em uma disposição horizontal, colocando-as lado a lado.
+Alternativa correta
+VStack é usado para exibir Views lado a lado, enquanto HStack é usado para exibir Views uma abaixo da outra.
+ 
+Alternativa correta
+VStack permite agrupar Views em uma única coluna, enquanto HStack permite agrupar Views em uma única linha.
+
+@@07
+Projeto final
+PRÓXIMA ATIVIDADE
+
+Você pode baixar ou acessar o código fonte do projeto final.
+Aproveite para explorá-lo e revisar pontos importantes do curso.
+
+Bons estudos!
+
+https://github.com/alura-cursos/chef-delivery-parte1/archive/835c904aac70dfa24d825f978563c6f9bfe58c7e.zip
+
+https://github.com/alura-cursos/chef-delivery-parte1/tree/835c904aac70dfa24d825f978563c6f9bfe58c7e
+
+@@08
+O que aprendemos?
+PRÓXIMA ATIVIDADE
+
+Nessa aula, você aprendeu como:
+Criar uma nova pasta "StoresView" e uma View chamada "StoreItemView";
+Utilizar o ListView ou VStack para criar a lista de lojas;
+Criar um mock no arquivo "DataSourceMock" para representar os restaurantes da listagem;
+Criar o arquivo "StoresContainerView" para agrupar as views da lista de restaurantes;
+Adicionar o contêiner "StoresContainerView" na View principal "ContentView";
+Explorar como deixar uma View clicável;
+Finalizar a lista de restaurantes com os devidos ajustes de alinhamento (leading, trailing).
+
+@@09
+Recados finais
+PRÓXIMA ATIVIDADE
+
+Parabéns, você chegou ao fim do nosso curso. Tenho certeza que esse mergulho foi de muito aprendizado.
+Após os créditos finais do curso, você será redirecionado para uma tela na qual poderá deixar seu feedback e avaliação do curso. Sua opinião é muito importante para nós.
+
+Aproveite para conhecer a nossa comunidade no Discord da Alura e se conectar com outras pessoas com quem pode conversar, aprender e aumentar seu networking.
+
+Continue mergulhando com a gente.
+
+@@10
+Conclusão
+
+Parabéns por concluir mais um curso!
+A ideia foi começar um aplicativo do zero, onde conforme fomos construindo aprendemos alguns conceitos de SwiftUI
+
+O que aprendemos?
+O objetivo inicial era construir a página inicial de um aplicativo de entregas de refeições, e, para isso, dividimos em componentes. Começamos com navigation bar, que contém a view com o endereço "R. Vergueiro, 3185".
+
+ área de pré-visualização do Xcode. Simulador do iPhone exibindo apenas o endereço "R. Vergueiro, 3185" e um ícone de sino do lado direito, representando as notificações
+
+Essa é uma view pequena, mas nos ajudou a visualizar como os elementos se posicionam na tela e trabalhar com os principais componentes, como botões, textos e modificadores.
+
+Em seguida, no arquivo OrderTypeGridView, começamos a entender o funcionamento de um Grid, que se assemelha a uma coleção de itens (collection view), permitindo a construção de várias linhas. Utilizamos esse componente para criar um menu de tipos de estabelecimentos para o usuário.
+
+Insira aqui a descrição dessa imagem para ajudar na acessibilidade
+
+Depois, criamos um carousel e uma imagem no arquivo CarouselTabView, utilizando o componente chamado TabView, muito usado para paginação. Nesse banner, colocamos uma sequência com três propagandas dos restaurantes do aplicativo.
+
+área de pré-visualização do Xcode. Simulador do iPhone exibindo apenas o banner de propaganda de churrasco com 30% de desconto
+
+Por fim, desenvolvemos a lista de lojas dos restaurantes utilizando o SwiftUI.
+
+área de pré-visualização do Xcode. Simulador do iPhone exibindo apenas a lista de restaurantes, sendo Monstro Burger, Food Court, Carbron, Padaria e Açaí Panda
+
+No final, integramos todos os componentes na página inicial (home) do aplicativo.
+
+mockup do aplicativo Chef Delivery. Na parte superior da tela, o endereço "R. Vergueiro, 3185" e um ícone de sino de Notificações. Abaixo, uma grade com ícones de categorias de navegação e seus nomes: Restaurantes, Farmácia, Descontos, Gourmet, Mercado, Pet, Bebidas. Abaixo, um banner de propaganda de churrasco com 30% de desconto. por fim, uma lista de título "Lojas" contendo os restaurantes "Monstro burger", "Food court" e "Carbron", nessa ordem.
+
+Conclusão
+Não deixe de participar da nossa comunidade no Discord, onde temos muitas pessoas estudantes engajadas em diversos assuntos sobre tecnologia.
+
+Ao final deste curso, compartilhe seu feedback. Ele é muito importante para que possamos melhorar nossos cursos.
+
+Você também pode compartilhar o seu projeto nas redes sociais com a hashtag #AprendiNaAlura.
+
+Até mais!
